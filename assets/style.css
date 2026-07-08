@@ -1,6 +1,6 @@
 :root {
-  --red: #e01a2b;
-  --green: #1f7a4d;
+  --red: #1e88e5;    /* azul Jacaré */
+  --green: #ffc700;  /* amarelo Jacaré */
   --black: #0c0c0c;
   --dark: #161616;
   --paper: #f7f7f5;
@@ -45,8 +45,12 @@ button { font-family: inherit; }
   letter-spacing: 0.5px;
   white-space: nowrap;
 }
-.logo-badge .oito { color: var(--red); font-size: 20px; }
-.logo-badge .infinite { font-size: 10px; color: #cfcfcf; letter-spacing: 2px; text-transform: uppercase; }
+.jacare-icon { font-size: 24px; line-height: 1; }
+.jacare-word {
+  font-size: 20px; font-weight: 800; color: var(--red);
+  display: flex; flex-direction: column; line-height: 1.05;
+}
+.jacare-sub { font-size: 9px; color: var(--green); letter-spacing: 2px; font-weight: 700; }
 
 .header-spacer { flex: 1; }
 
@@ -130,6 +134,7 @@ button { font-family: inherit; }
 .hero .eyebrow {
   display: inline-block;
   background: var(--green);
+  color: #171200;
   padding: 4px 12px;
   border-radius: 999px;
   font-size: 12px;
@@ -217,7 +222,7 @@ button { font-family: inherit; }
   display: block;
   margin-top: 6px;
   font-size: 11px;
-  color: #8fe0b4;
+  color: #ffe27a;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -266,7 +271,7 @@ details.soon-block summary {
 }
 .product-card .thumb img { width: 100%; height: 100%; object-fit: cover; }
 .product-card .info { padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
-.product-card .sku { font-size: 10px; color: var(--green); font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; }
+.product-card .sku { font-size: 10px; color: var(--red); font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; }
 .product-card .name { font-size: 13px; font-weight: 600; line-height: 1.35; flex: 1; }
 .product-card .price { font-size: 17px; font-weight: 800; color: var(--black); }
 .add-btn {
@@ -282,8 +287,102 @@ details.soon-block summary {
   cursor: pointer;
   width: 100%;
 }
-.add-btn.in-cart { background: var(--green); }
+.add-btn.in-cart { background: var(--red); }
 .add-btn:active { transform: scale(0.98); }
+
+/* ---------- Builder CTA (home) ---------- */
+.builder-cta {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+.builder-cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  background: linear-gradient(120deg, var(--red), #0d3f6b);
+  color: #fff;
+  border-radius: var(--radius);
+  padding: 22px 26px;
+  margin-top: 24px;
+  flex-wrap: wrap;
+}
+.builder-cta-eyebrow { font-size: 11px; font-weight: 800; letter-spacing: 1.5px; color: var(--green); margin-bottom: 4px; }
+.builder-cta h2 { margin: 0 0 6px; font-size: 22px; }
+.builder-cta p { margin: 0; font-size: 13px; color: #dceeff; max-width: 480px; }
+.builder-cta-btn {
+  background: var(--green); color: #171200; border: none; padding: 12px 20px;
+  border-radius: 999px; font-weight: 800; font-size: 14px; cursor: pointer; white-space: nowrap;
+}
+
+/* ---------- Bicicletas prontas (home) ---------- */
+.bikes-section { max-width: 1100px; margin: 0 auto; padding: 28px 20px 8px; }
+.bike-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+.bike-card { background: #fff; border-radius: var(--radius); overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,.06); }
+.bike-card-photo { background: #0c0c0c; }
+.bike-card-photo img { width: 100%; aspect-ratio: 16/10; object-fit: cover; }
+.bike-card-info { padding: 14px 16px 18px; }
+.bike-card-name { font-weight: 800; font-size: 16px; margin-bottom: 6px; }
+.bike-card-specs { margin: 0 0 10px; padding-left: 18px; font-size: 12px; color: var(--muted); line-height: 1.6; }
+.bike-card-colors { display: flex; align-items: center; gap: 6px; margin-bottom: 12px; }
+.color-dot { width: 10px; height: 10px; border-radius: 999px; background: var(--green); flex-shrink: 0; }
+.color-label { font-size: 11px; color: var(--muted); }
+.wa-inquire-btn {
+  display: block; text-align: center; background: var(--black); color: #fff;
+  padding: 10px; border-radius: 8px; font-size: 13px; font-weight: 700;
+}
+
+/* ---------- Bike Builder wizard ---------- */
+.builder-page { max-width: 1100px; margin: 0 auto; padding: 20px; }
+.builder-visual {
+  background: #fff; border-radius: var(--radius); padding: 20px;
+  box-shadow: 0 2px 10px rgba(0,0,0,.06); margin-bottom: 18px;
+  text-align: center;
+}
+.bike-svg { width: 100%; max-width: 380px; margin: 0 auto; display: block; }
+.bike-svg .bp-part { fill: none; stroke: #dcdcd6; stroke-width: 4; stroke-linecap: round; transition: stroke .35s ease, fill .35s ease, filter .35s ease; }
+.bike-svg .bp-saddle.bp-part,
+.bike-svg .bp-drivetrain.bp-part circle, .bike-svg .bp-drivetrain.bp-part polygon,
+.bike-svg .bp-brake-r.bp-part rect, .bike-svg .bp-brake-f.bp-part rect { fill: #dcdcd6; stroke: none; }
+.bike-svg .bp-part.active { stroke: var(--red); filter: drop-shadow(0 0 4px rgba(30,136,229,.45)); }
+.bike-svg .bp-saddle.active,
+.bike-svg .bp-drivetrain.active circle, .bike-svg .bp-drivetrain.active polygon,
+.bike-svg .bp-brake-r.active rect, .bike-svg .bp-brake-f.active rect { fill: var(--red); }
+.builder-subtotal { margin-top: 10px; font-size: 14px; color: var(--muted); }
+.builder-subtotal strong { color: var(--black); font-size: 16px; }
+
+.builder-tracker {
+  display: flex; overflow-x: auto; gap: 6px; padding-bottom: 10px; margin-bottom: 18px;
+}
+.tracker-dot {
+  flex: 1; min-width: 84px; text-align: center; cursor: pointer; padding: 8px 4px;
+  border-radius: 10px; border: 2px solid #eee;
+}
+.tracker-dot.current { border-color: var(--red); background: #eaf4fd; }
+.tracker-dot.done .tracker-num { background: var(--red); color: #fff; }
+.tracker-num {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 22px; height: 22px; border-radius: 999px; background: #eee; font-size: 11px; font-weight: 800; margin-bottom: 4px;
+}
+.tracker-label { display: block; font-size: 10px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .3px; }
+
+.product-card.chosen { outline: 3px solid var(--red); }
+
+.builder-nav { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
+.builder-nav-btn { padding: 12px 18px; border-radius: 999px; font-weight: 700; font-size: 13px; border: none; cursor: pointer; }
+.builder-nav-btn.primary { background: var(--black); color: #fff; margin-left: auto; }
+.builder-nav-btn.ghost { background: #eee; color: var(--black); }
+.builder-nav-btn.ghost:disabled { opacity: .4; cursor: not-allowed; }
+.builder-nav .checkout-btn { margin-left: auto; width: auto; padding: 12px 22px; }
+
+.summary-list { display: flex; flex-direction: column; gap: 8px; max-width: 500px; margin: 0 auto; }
+.summary-row { display: flex; align-items: center; gap: 12px; background: #fff; border-radius: 10px; padding: 10px 14px; box-shadow: 0 1px 4px rgba(0,0,0,.05); }
+.summary-label { font-size: 11px; font-weight: 800; color: var(--muted); text-transform: uppercase; width: 110px; flex-shrink: 0; }
+.summary-item { display: flex; align-items: center; gap: 10px; flex: 1; font-size: 13px; font-weight: 600; }
+.summary-item img { width: 34px; height: 34px; object-fit: cover; border-radius: 6px; }
+.summary-item strong { margin-left: auto; }
+.summary-item.empty { color: #bbb; font-style: italic; font-weight: 400; }
 
 /* ---------- Cart drawer ---------- */
 .cart-overlay {
@@ -325,7 +424,7 @@ details.soon-block summary {
 .cart-footer { padding: 16px 20px 20px; border-top: 1px solid #eee; }
 .cart-total { display: flex; justify-content: space-between; font-weight: 800; font-size: 16px; margin-bottom: 12px; }
 .checkout-btn {
-  display: block; width: 100%; text-align: center; background: var(--green); color: #fff;
+  display: block; width: 100%; text-align: center; background: var(--red); color: #fff;
   padding: 14px; border-radius: 10px; font-weight: 800; font-size: 14px; border: none; cursor: pointer;
 }
 .checkout-btn[disabled] { background: #ccc; cursor: not-allowed; }

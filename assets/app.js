@@ -1,4 +1,4 @@
-const WHATSAPP_NUMBER = "5547996268282"; // (47) 99626-8282, formato internacional
+const WHATSAPP_NUMBER = "555194285149"; // Jacaré Bike Store — número real do link wa.me na bio do Instagram
 
 const app = document.getElementById("app");
 const cartOverlayRoot = document.getElementById("cartOverlayRoot");
@@ -69,6 +69,10 @@ const CATEGORY_COVER = {
   selins: "assets/products/p88_01.jpg",
   capacetes: "assets/products/p99_06.jpg",
   acessorios: "assets/products/p117_00.jpg",
+  cambios: "assets/products/p12_10.jpg",
+  freios: "assets/products/p29_02.jpg",
+  guidoes: "assets/products/p40_05.jpg",
+  quadros: "assets/products/p74_00.jpg",
 };
 
 function renderHome() {
@@ -84,16 +88,40 @@ function renderHome() {
 
   const soonChips = COMING_SOON_CATEGORIES.map(name => `<span class="soon-chip">${name}</span>`).join("");
 
+  const bikeCards = BIKES.map(b => `
+    <div class="bike-card">
+      <div class="bike-card-photo"><img src="${b.colors[0].img}" alt="${b.name}"></div>
+      <div class="bike-card-info">
+        <div class="bike-card-name">${b.name}</div>
+        <ul class="bike-card-specs">${b.specs.slice(0, 3).map(s => `<li>${s}</li>`).join("")}</ul>
+        <div class="bike-card-colors">
+          ${b.colors.map(c => `<span class="color-dot" title="${c.name}"></span>`).join("")}
+          <span class="color-label">${b.colors.map(c => c.name).join(" · ")}</span>
+        </div>
+        <a class="wa-inquire-btn" target="_blank" rel="noopener" href="${bikeInquiryLink(b)}">Consultar preço no WhatsApp</a>
+      </div>
+    </div>
+  `).join("");
+
   app.innerHTML = `
     <div class="hero">
       <div class="hero-inner">
         <div class="hero-text">
-          <span class="eyebrow">CATÁLOGO 2026</span>
-          <h1>MOVENDO VOCÊ PARA O FUTURO</h1>
-          <p>Catálogo digital ALL COMPANY B2B. Escolha uma categoria, monte seu pedido e feche pelo WhatsApp.</p>
+          <span class="eyebrow">SÃO LEOPOLDO/RS</span>
+          <h1>SUA BIKE, DO JEITO QUE VOCÊ QUISER</h1>
+          <p>Loja online da Jacaré Bike Store. Escolha uma categoria ou monte sua bicicleta peça por peça, e feche o pedido direto pelo WhatsApp.</p>
         </div>
         <div class="hero-photo"><img src="assets/pages/hero-bg.jpg" alt=""></div>
       </div>
+    </div>
+
+    <div class="builder-cta">
+      <div class="builder-cta-text">
+        <div class="builder-cta-eyebrow">NOVO</div>
+        <h2>Monte sua bicicleta</h2>
+        <p>Escolha quadro, rodas, freios, câmbio e mais — acompanhe sua bike ganhando forma a cada peça escolhida.</p>
+      </div>
+      <button class="builder-cta-btn" id="startBuilderBtn">Começar a montar →</button>
     </div>
 
     <div id="categorias" class="category-grid">
@@ -102,6 +130,12 @@ function renderHome() {
         <div class="section-sub">Escolha uma categoria, adicione ao carrinho e feche o pedido pelo WhatsApp.</div>
       </div>
       ${catCards}
+    </div>
+
+    <div class="bikes-section">
+      <div class="section-title">Bicicletas prontas</div>
+      <div class="section-sub">Modelos completos Sunpeed — preço sob consulta.</div>
+      <div class="bike-grid">${bikeCards}</div>
     </div>
 
     <details class="soon-block">
@@ -113,6 +147,12 @@ function renderHome() {
   app.querySelectorAll(".cat-card[data-cat]").forEach(el => {
     el.addEventListener("click", () => renderCategory(el.dataset.cat));
   });
+  document.getElementById("startBuilderBtn").addEventListener("click", () => startBuilder());
+}
+
+function bikeInquiryLink(bike) {
+  const msg = `Olá! Vi no catálogo digital e tenho interesse na bicicleta ${bike.name} (${bike.colors.map(c => c.name).join(", ")}). Podem me passar o preço?`;
+  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
 }
 
 function productCardHtml(p) {
@@ -179,6 +219,188 @@ function renderSearch(query) {
   `;
   document.getElementById("backBtn").addEventListener("click", renderHome);
   bindAddButtons(app.querySelector(".product-grid"), results);
+  window.scrollTo(0, 0);
+}
+
+// ---------- Bike Builder ("Monte sua Bicicleta") ----------
+const BUILDER_STEPS = [
+  { key: "quadros", label: "Quadro", parts: ["bp-frame"] },
+  { key: "rodas", label: "Rodas & Aros", parts: ["bp-rim-f", "bp-rim-r"] },
+  { key: "pneus", label: "Pneus", parts: ["bp-tire-f", "bp-tire-r"] },
+  { key: "freios", label: "Freios", parts: ["bp-brake-f", "bp-brake-r"] },
+  { key: "cambios", label: "Câmbio & Alavanca", parts: ["bp-drivetrain"] },
+  { key: "guidoes", label: "Guidão", parts: ["bp-handlebar"] },
+  { key: "selins", label: "Selim", parts: ["bp-saddle"] },
+];
+
+let builderChoices = {};
+let builderStep = 0;
+
+function startBuilder() {
+  builderChoices = {};
+  builderStep = 0;
+  renderBuilderStep();
+}
+
+function bikeSvgMarkup(activeParts) {
+  const cls = (name) => `bp-part ${name}${activeParts.includes(name) ? " active" : ""}`;
+  return `
+  <svg viewBox="0 0 200 100" class="bike-svg" xmlns="http://www.w3.org/2000/svg">
+    <circle class="${cls("bp-tire-r")}" cx="35" cy="72" r="28"></circle>
+    <circle class="${cls("bp-tire-f")}" cx="165" cy="72" r="28"></circle>
+    <circle class="${cls("bp-rim-r")}" cx="35" cy="72" r="18"></circle>
+    <circle class="${cls("bp-rim-f")}" cx="165" cy="72" r="18"></circle>
+    <g class="${cls("bp-frame")}">
+      <line x1="35" y1="72" x2="100" y2="72"></line>
+      <line x1="100" y1="72" x2="90" y2="20"></line>
+      <line x1="90" y1="20" x2="150" y2="32"></line>
+      <line x1="100" y1="72" x2="150" y2="32"></line>
+      <line x1="150" y1="34" x2="165" y2="72"></line>
+    </g>
+    <g class="${cls("bp-drivetrain")}">
+      <circle cx="100" cy="72" r="7"></circle>
+      <polygon points="38,84 49,90 39,97"></polygon>
+    </g>
+    <g class="${cls("bp-handlebar")}">
+      <line x1="150" y1="32" x2="161" y2="17"></line>
+      <line x1="152" y1="19" x2="172" y2="24"></line>
+    </g>
+    <ellipse class="${cls("bp-saddle")}" cx="88" cy="17" rx="11" ry="4"></ellipse>
+    <g class="${cls("bp-brake-r")}"><rect x="29" y="46" width="11" height="9" rx="2"></rect></g>
+    <g class="${cls("bp-brake-f")}"><rect x="160" y="46" width="11" height="9" rx="2"></rect></g>
+  </svg>`;
+}
+
+function builderActiveParts() {
+  let parts = [];
+  BUILDER_STEPS.forEach(step => {
+    if (builderChoices[step.key]) parts = parts.concat(step.parts);
+  });
+  return parts;
+}
+
+function builderTotal() {
+  return Object.values(builderChoices).filter(Boolean).reduce((sum, p) => sum + p.price, 0);
+}
+
+function renderBuilderStep() {
+  const step = BUILDER_STEPS[builderStep];
+  const products = PRODUCTS.filter(p => p.cat === step.key);
+  const chosen = builderChoices[step.key];
+
+  const tracker = BUILDER_STEPS.map((s, i) => `
+    <div class="tracker-dot ${i === builderStep ? "current" : ""} ${builderChoices[s.key] ? "done" : ""}" data-step="${i}">
+      <span class="tracker-num">${builderChoices[s.key] ? "✓" : i + 1}</span>
+      <span class="tracker-label">${s.label}</span>
+    </div>
+  `).join("");
+
+  const cards = products.map(p => `
+    <div class="product-card ${chosen && productKey(chosen) === productKey(p) ? "chosen" : ""}">
+      <div class="thumb"><img src="${p.img}" alt="${p.name}" loading="lazy"></div>
+      <div class="info">
+        <div class="sku">${p.sku}</div>
+        <div class="name">${p.name}</div>
+        <div class="price">${money(p.price)}</div>
+        <button class="add-btn choose-btn" data-key="${productKey(p)}">
+          ${chosen && productKey(chosen) === productKey(p) ? "✓ Escolhido" : "Escolher"}
+        </button>
+      </div>
+    </div>
+  `).join("");
+
+  app.innerHTML = `
+    <div class="builder-page">
+      <div class="breadcrumb"><button id="exitBuilderBtn">← Menu</button> / Monte sua Bicicleta</div>
+
+      <div class="builder-visual">
+        ${bikeSvgMarkup(builderActiveParts())}
+        <div class="builder-subtotal">Subtotal: <strong>${money(builderTotal())}</strong></div>
+      </div>
+
+      <div class="builder-tracker">${tracker}</div>
+
+      <div class="section-title">Passo ${builderStep + 1} de ${BUILDER_STEPS.length}: ${step.label}</div>
+      <div class="section-sub">${products.length} opções disponíveis</div>
+      <div class="product-grid">${cards}</div>
+
+      <div class="builder-nav">
+        <button class="builder-nav-btn ghost" id="builderBackBtn" ${builderStep === 0 ? "disabled" : ""}>← Voltar</button>
+        <button class="builder-nav-btn ghost" id="builderSkipBtn">Pular esta etapa</button>
+        <button class="builder-nav-btn primary" id="builderNextBtn">${builderStep === BUILDER_STEPS.length - 1 ? "Ver resumo" : "Continuar →"}</button>
+      </div>
+    </div>
+  `;
+
+  document.getElementById("exitBuilderBtn").addEventListener("click", renderHome);
+  document.querySelectorAll(".tracker-dot").forEach(el => {
+    el.addEventListener("click", () => { builderStep = Number(el.dataset.step); renderBuilderStep(); });
+  });
+  document.querySelectorAll(".choose-btn").forEach((btn, i) => {
+    btn.addEventListener("click", () => {
+      builderChoices[step.key] = products[i];
+      renderBuilderStep();
+    });
+  });
+  document.getElementById("builderBackBtn").addEventListener("click", () => {
+    if (builderStep > 0) { builderStep--; renderBuilderStep(); }
+  });
+  document.getElementById("builderSkipBtn").addEventListener("click", () => {
+    builderChoices[step.key] = null;
+    advanceBuilder();
+  });
+  document.getElementById("builderNextBtn").addEventListener("click", () => advanceBuilder());
+  window.scrollTo(0, 0);
+}
+
+function advanceBuilder() {
+  if (builderStep < BUILDER_STEPS.length - 1) { builderStep++; renderBuilderStep(); }
+  else renderBuilderSummary();
+}
+
+function builderWaLink() {
+  const lines = BUILDER_STEPS.map(step => {
+    const p = builderChoices[step.key];
+    return p ? `• ${step.label}: ${p.sku} - ${p.name} (${money(p.price)})` : `• ${step.label}: não escolhido`;
+  });
+  const msg = `Olá! Montei uma bicicleta no catálogo digital e quero fazer um pedido:\n\n${lines.join("\n")}\n\nTotal: ${money(builderTotal())}`;
+  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
+}
+
+function renderBuilderSummary() {
+  const rows = BUILDER_STEPS.map(step => {
+    const p = builderChoices[step.key];
+    return `
+      <div class="summary-row">
+        <div class="summary-label">${step.label}</div>
+        ${p
+          ? `<div class="summary-item"><img src="${p.img}" alt=""><span>${p.name}</span><strong>${money(p.price)}</strong></div>`
+          : `<div class="summary-item empty">Não escolhido</div>`}
+      </div>
+    `;
+  }).join("");
+
+  app.innerHTML = `
+    <div class="builder-page">
+      <div class="breadcrumb"><button id="exitBuilderBtn">← Menu</button> / Monte sua Bicicleta / Resumo</div>
+
+      <div class="builder-visual">
+        ${bikeSvgMarkup(builderActiveParts())}
+      </div>
+
+      <div class="section-title">Sua bicicleta montada</div>
+      <div class="summary-list">${rows}</div>
+
+      <div class="cart-total" style="max-width:500px;margin:16px auto;"><span>Total</span><span>${money(builderTotal())}</span></div>
+
+      <div class="builder-nav" style="max-width:500px;margin:0 auto;">
+        <button class="builder-nav-btn ghost" id="restartBuilderBtn">Montar de novo</button>
+        <a class="checkout-btn" href="${builderWaLink()}" target="_blank" rel="noopener">Fechar pedido no WhatsApp</a>
+      </div>
+    </div>
+  `;
+  document.getElementById("exitBuilderBtn").addEventListener("click", renderHome);
+  document.getElementById("restartBuilderBtn").addEventListener("click", () => startBuilder());
   window.scrollTo(0, 0);
 }
 
