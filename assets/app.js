@@ -271,54 +271,51 @@ function spokeLines(cx, cy, rInner, rOuter, count) {
 
 function bikeSvgMarkup(activeParts) {
   const cls = (name) => `bp-part ${name}${activeParts.includes(name) ? " active" : ""}`;
-  const rearHub = [55, 90], frontHub = [205, 90];
+  const rearHub = [42, 95], frontHub = [218, 95];
+  const bb = [113, 95], seatTop = [92, 38], headTop = [166, 50], headBot = [171, 60];
 
   return `
   <svg viewBox="0 0 260 130" class="bike-svg" xmlns="http://www.w3.org/2000/svg">
-    <ellipse class="bike-shadow" cx="130" cy="118" rx="95" ry="6"></ellipse>
+    <ellipse class="bike-shadow" cx="130" cy="122" rx="100" ry="6"></ellipse>
 
-    <g class="${cls("bp-tire-r")}">
-      <circle cx="${rearHub[0]}" cy="${rearHub[1]}" r="34"></circle>
-    </g>
-    <g class="${cls("bp-tire-f")}">
-      <circle cx="${frontHub[0]}" cy="${frontHub[1]}" r="34"></circle>
-    </g>
+    <g class="${cls("bp-tire-r")}"><circle cx="${rearHub[0]}" cy="${rearHub[1]}" r="32"></circle></g>
+    <g class="${cls("bp-tire-f")}"><circle cx="${frontHub[0]}" cy="${frontHub[1]}" r="32"></circle></g>
     <g class="${cls("bp-rim-r")}">
-      <circle cx="${rearHub[0]}" cy="${rearHub[1]}" r="21"></circle>
-      ${spokeLines(rearHub[0], rearHub[1], 4, 20, 10)}
+      <circle cx="${rearHub[0]}" cy="${rearHub[1]}" r="20"></circle>
+      ${spokeLines(rearHub[0], rearHub[1], 4, 19, 10)}
       <circle cx="${rearHub[0]}" cy="${rearHub[1]}" r="4" class="hub-dot"></circle>
     </g>
     <g class="${cls("bp-rim-f")}">
-      <circle cx="${frontHub[0]}" cy="${frontHub[1]}" r="21"></circle>
-      ${spokeLines(frontHub[0], frontHub[1], 4, 20, 10)}
+      <circle cx="${frontHub[0]}" cy="${frontHub[1]}" r="20"></circle>
+      ${spokeLines(frontHub[0], frontHub[1], 4, 19, 10)}
       <circle cx="${frontHub[0]}" cy="${frontHub[1]}" r="4" class="hub-dot"></circle>
     </g>
 
     <g class="${cls("bp-frame")}">
-      <path d="M 55,90 L 130,90 L 118,32 Z"></path>
-      <path d="M 118,32 L 186,46 L 130,90"></path>
-      <path d="M 186,46 Q 200,58 205,90" class="fork"></path>
+      <line x1="${rearHub[0]}" y1="${rearHub[1]}" x2="${bb[0]}" y2="${bb[1]}"></line>
+      <line x1="${bb[0]}" y1="${bb[1]}" x2="${seatTop[0]}" y2="${seatTop[1]}"></line>
+      <line x1="${rearHub[0]}" y1="${rearHub[1]}" x2="${seatTop[0]}" y2="${seatTop[1]}"></line>
+      <line x1="${seatTop[0]}" y1="${seatTop[1]}" x2="${headTop[0]}" y2="${headTop[1]}"></line>
+      <line x1="${bb[0]}" y1="${bb[1]}" x2="${headBot[0]}" y2="${headBot[1]}"></line>
+      <line class="fork" x1="${headBot[0]}" y1="${headBot[1]}" x2="${frontHub[0]}" y2="${frontHub[1]}"></line>
     </g>
 
     <g class="${cls("bp-drivetrain")}">
-      <circle cx="130" cy="90" r="10"></circle>
-      <line x1="130" y1="90" x2="146" y2="99"></line>
-      <line x1="130" y1="90" x2="114" y2="81"></line>
-      <rect x="143" y="97" width="9" height="5" rx="1.5"></rect>
-      <rect x="108" y="78" width="9" height="5" rx="1.5"></rect>
-      <path d="M 55,90 Q 40,96 42,108 Q 52,112 60,102 Z" class="derailleur"></path>
+      <circle cx="${bb[0]}" cy="${bb[1]}" r="10"></circle>
     </g>
 
     <g class="${cls("bp-handlebar")}">
-      <path d="M 186,46 L 195,27"></path>
-      <path d="M 181,30 Q 197,20 212,26"></path>
-      <circle cx="212" cy="26" r="3.5" class="grip"></circle>
+      <line x1="${headTop[0]}" y1="${headTop[1]}" x2="${headTop[0]+3}" y2="${headTop[1]-22}"></line>
+      <line x1="${headTop[0]-10}" y1="${headTop[1]-20}" x2="${headTop[0]+16}" y2="${headTop[1]-20}"></line>
     </g>
 
-    <path class="${cls("bp-saddle")}" d="M 100,29 Q 118,20 134,26 Q 132,33 118,33 Q 106,33 100,29 Z"></path>
+    <g class="${cls("bp-saddle")}">
+      <line x1="${seatTop[0]}" y1="${seatTop[1]}" x2="${seatTop[0]}" y2="${seatTop[1]-10}"></line>
+      <rect x="${seatTop[0]-15}" y="${seatTop[1]-15}" width="28" height="7" rx="3.5"></rect>
+    </g>
 
-    <g class="${cls("bp-brake-r")}"><rect x="42" y="65" width="12" height="10" rx="2.5"></rect></g>
-    <g class="${cls("bp-brake-f")}"><rect x="192" y="65" width="12" height="10" rx="2.5"></rect></g>
+    <g class="${cls("bp-brake-r")}"><rect x="${rearHub[0]-5}" y="${rearHub[1]-30}" width="11" height="9" rx="2.5"></rect></g>
+    <g class="${cls("bp-brake-f")}"><rect x="${frontHub[0]-6}" y="${frontHub[1]-30}" width="11" height="9" rx="2.5"></rect></g>
   </svg>`;
 }
 

@@ -348,14 +348,14 @@ details.soon-block summary {
 .bike-svg .bp-part.active { stroke: var(--red); filter: drop-shadow(0 0 5px rgba(30,136,229,.5)); }
 
 /* solid (filled) sub-shapes */
-.bike-svg .bp-saddle,
-.bike-svg .bp-drivetrain rect, .bike-svg .bp-drivetrain .derailleur,
+.bike-svg .bp-saddle rect,
+.bike-svg .bp-drivetrain circle,
 .bike-svg .bp-brake-r rect, .bike-svg .bp-brake-f rect,
-.bike-svg .hub-dot, .bike-svg .grip {
+.bike-svg .hub-dot {
   fill: #a9a9a0; stroke: none; transition: fill .35s ease, filter .35s ease;
 }
-.bike-svg .bp-saddle.active,
-.bike-svg .bp-drivetrain.active rect, .bike-svg .bp-drivetrain.active .derailleur,
+.bike-svg .bp-saddle.active rect,
+.bike-svg .bp-drivetrain.active circle,
 .bike-svg .bp-brake-r.active rect, .bike-svg .bp-brake-f.active rect { fill: var(--red); filter: drop-shadow(0 0 5px rgba(30,136,229,.5)); }
 .bike-svg .bp-rim-r.active .hub-dot, .bike-svg .bp-rim-f.active .hub-dot { fill: var(--red); }
 .bike-svg .bp-handlebar.active .grip { fill: var(--red); }
