@@ -73,6 +73,22 @@ const CATEGORY_COVER = {
   freios: "assets/products/p29_02.jpg",
   guidoes: "assets/products/p40_05.jpg",
   quadros: "assets/products/p74_00.jpg",
+  cabos: "assets/products/p8_00.jpg",
+  correntes: "assets/products/p19_00.jpg",
+  canotes: "assets/products/p16_00.jpg",
+  cubos: "assets/products/p21_00.jpg",
+  ferramentas: "assets/products/p34_00.jpg",
+  gancheiras: "assets/products/p38_00.jpg",
+  manoplas: "assets/products/p46_00.jpg",
+  "mov-central": "assets/products/p51_00.jpg",
+  "mov-direcao": "assets/products/p54_00.jpg",
+  pedais: "assets/products/p56_00.jpg",
+  pedivelas: "assets/products/p60_00.jpg",
+  raios: "assets/products/p77_00.jpg",
+  "roda-livre": "assets/products/p80_00.jpg",
+  suspensao: "assets/products/p101_00.jpg",
+  suplementos: "assets/products/p103_00.jpg",
+  squeeze: "assets/products/p124_00.jpg",
 };
 
 function renderHome() {
