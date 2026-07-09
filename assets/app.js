@@ -242,32 +242,67 @@ function startBuilder() {
   renderBuilderStep();
 }
 
+function spokeLines(cx, cy, rInner, rOuter, count) {
+  let out = "";
+  for (let i = 0; i < count; i++) {
+    const a = (Math.PI * 2 * i) / count;
+    const x1 = cx + Math.cos(a) * rInner, y1 = cy + Math.sin(a) * rInner;
+    const x2 = cx + Math.cos(a) * rOuter, y2 = cy + Math.sin(a) * rOuter;
+    out += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}"></line>`;
+  }
+  return out;
+}
+
 function bikeSvgMarkup(activeParts) {
   const cls = (name) => `bp-part ${name}${activeParts.includes(name) ? " active" : ""}`;
+  const rearHub = [55, 90], frontHub = [205, 90];
+
   return `
-  <svg viewBox="0 0 200 100" class="bike-svg" xmlns="http://www.w3.org/2000/svg">
-    <circle class="${cls("bp-tire-r")}" cx="35" cy="72" r="28"></circle>
-    <circle class="${cls("bp-tire-f")}" cx="165" cy="72" r="28"></circle>
-    <circle class="${cls("bp-rim-r")}" cx="35" cy="72" r="18"></circle>
-    <circle class="${cls("bp-rim-f")}" cx="165" cy="72" r="18"></circle>
+  <svg viewBox="0 0 260 130" class="bike-svg" xmlns="http://www.w3.org/2000/svg">
+    <ellipse class="bike-shadow" cx="130" cy="118" rx="95" ry="6"></ellipse>
+
+    <g class="${cls("bp-tire-r")}">
+      <circle cx="${rearHub[0]}" cy="${rearHub[1]}" r="34"></circle>
+    </g>
+    <g class="${cls("bp-tire-f")}">
+      <circle cx="${frontHub[0]}" cy="${frontHub[1]}" r="34"></circle>
+    </g>
+    <g class="${cls("bp-rim-r")}">
+      <circle cx="${rearHub[0]}" cy="${rearHub[1]}" r="21"></circle>
+      ${spokeLines(rearHub[0], rearHub[1], 4, 20, 10)}
+      <circle cx="${rearHub[0]}" cy="${rearHub[1]}" r="4" class="hub-dot"></circle>
+    </g>
+    <g class="${cls("bp-rim-f")}">
+      <circle cx="${frontHub[0]}" cy="${frontHub[1]}" r="21"></circle>
+      ${spokeLines(frontHub[0], frontHub[1], 4, 20, 10)}
+      <circle cx="${frontHub[0]}" cy="${frontHub[1]}" r="4" class="hub-dot"></circle>
+    </g>
+
     <g class="${cls("bp-frame")}">
-      <line x1="35" y1="72" x2="100" y2="72"></line>
-      <line x1="100" y1="72" x2="90" y2="20"></line>
-      <line x1="90" y1="20" x2="150" y2="32"></line>
-      <line x1="100" y1="72" x2="150" y2="32"></line>
-      <line x1="150" y1="34" x2="165" y2="72"></line>
+      <path d="M 55,90 L 130,90 L 118,32 Z"></path>
+      <path d="M 118,32 L 186,46 L 130,90"></path>
+      <path d="M 186,46 Q 200,58 205,90" class="fork"></path>
     </g>
+
     <g class="${cls("bp-drivetrain")}">
-      <circle cx="100" cy="72" r="7"></circle>
-      <polygon points="38,84 49,90 39,97"></polygon>
+      <circle cx="130" cy="90" r="10"></circle>
+      <line x1="130" y1="90" x2="146" y2="99"></line>
+      <line x1="130" y1="90" x2="114" y2="81"></line>
+      <rect x="143" y="97" width="9" height="5" rx="1.5"></rect>
+      <rect x="108" y="78" width="9" height="5" rx="1.5"></rect>
+      <path d="M 55,90 Q 40,96 42,108 Q 52,112 60,102 Z" class="derailleur"></path>
     </g>
+
     <g class="${cls("bp-handlebar")}">
-      <line x1="150" y1="32" x2="161" y2="17"></line>
-      <line x1="152" y1="19" x2="172" y2="24"></line>
+      <path d="M 186,46 L 195,27"></path>
+      <path d="M 181,30 Q 197,20 212,26"></path>
+      <circle cx="212" cy="26" r="3.5" class="grip"></circle>
     </g>
-    <ellipse class="${cls("bp-saddle")}" cx="88" cy="17" rx="11" ry="4"></ellipse>
-    <g class="${cls("bp-brake-r")}"><rect x="29" y="46" width="11" height="9" rx="2"></rect></g>
-    <g class="${cls("bp-brake-f")}"><rect x="160" y="46" width="11" height="9" rx="2"></rect></g>
+
+    <path class="${cls("bp-saddle")}" d="M 100,29 Q 118,20 134,26 Q 132,33 118,33 Q 106,33 100,29 Z"></path>
+
+    <g class="${cls("bp-brake-r")}"><rect x="42" y="65" width="12" height="10" rx="2.5"></rect></g>
+    <g class="${cls("bp-brake-f")}"><rect x="192" y="65" width="12" height="10" rx="2.5"></rect></g>
   </svg>`;
 }
 

@@ -340,15 +340,29 @@ details.soon-block summary {
   box-shadow: 0 2px 10px rgba(0,0,0,.06); margin-bottom: 18px;
   text-align: center;
 }
-.bike-svg { width: 100%; max-width: 380px; margin: 0 auto; display: block; }
-.bike-svg .bp-part { fill: none; stroke: #dcdcd6; stroke-width: 4; stroke-linecap: round; transition: stroke .35s ease, fill .35s ease, filter .35s ease; }
-.bike-svg .bp-saddle.bp-part,
-.bike-svg .bp-drivetrain.bp-part circle, .bike-svg .bp-drivetrain.bp-part polygon,
-.bike-svg .bp-brake-r.bp-part rect, .bike-svg .bp-brake-f.bp-part rect { fill: #dcdcd6; stroke: none; }
-.bike-svg .bp-part.active { stroke: var(--red); filter: drop-shadow(0 0 4px rgba(30,136,229,.45)); }
+.bike-svg { width: 100%; max-width: 420px; margin: 0 auto; display: block; }
+.bike-svg .bike-shadow { fill: #ececea; stroke: none; }
+
+.bike-svg .bp-part { fill: none; stroke: #a9a9a0; stroke-width: 4.5; stroke-linecap: round; stroke-linejoin: round; transition: stroke .35s ease, fill .35s ease, filter .35s ease; }
+.bike-svg .bp-part.active { stroke: var(--red); filter: drop-shadow(0 0 5px rgba(30,136,229,.5)); }
+
+/* solid (filled) sub-shapes */
+.bike-svg .bp-saddle,
+.bike-svg .bp-drivetrain rect, .bike-svg .bp-drivetrain .derailleur,
+.bike-svg .bp-brake-r rect, .bike-svg .bp-brake-f rect,
+.bike-svg .hub-dot, .bike-svg .grip {
+  fill: #a9a9a0; stroke: none; transition: fill .35s ease, filter .35s ease;
+}
 .bike-svg .bp-saddle.active,
-.bike-svg .bp-drivetrain.active circle, .bike-svg .bp-drivetrain.active polygon,
-.bike-svg .bp-brake-r.active rect, .bike-svg .bp-brake-f.active rect { fill: var(--red); }
+.bike-svg .bp-drivetrain.active rect, .bike-svg .bp-drivetrain.active .derailleur,
+.bike-svg .bp-brake-r.active rect, .bike-svg .bp-brake-f.active rect { fill: var(--red); filter: drop-shadow(0 0 5px rgba(30,136,229,.5)); }
+.bike-svg .bp-rim-r.active .hub-dot, .bike-svg .bp-rim-f.active .hub-dot { fill: var(--red); }
+.bike-svg .bp-handlebar.active .grip { fill: var(--red); }
+
+/* thicker outer tire, thinner rim/spokes */
+.bike-svg .bp-tire-r, .bike-svg .bp-tire-f { stroke-width: 7; }
+.bike-svg .bp-rim-r, .bike-svg .bp-rim-f { stroke-width: 2.5; }
+.bike-svg .fork { stroke-width: 5.5; }
 .builder-subtotal { margin-top: 10px; font-size: 14px; color: var(--muted); }
 .builder-subtotal strong { color: var(--black); font-size: 16px; }
 
