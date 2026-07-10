@@ -8,26 +8,77 @@
 </head>
 <body>
   <header class="site-header">
-    <a href="#" id="menuBtn" class="logo-badge">
-      <span class="jacare-icon">🐊</span>
-      <span class="jacare-word">Jacaré<span class="jacare-sub">BIKE STORE</span></span>
-    </a>
-    <div class="search-box">
-      <input id="searchInput" type="text" placeholder="Buscar produto ou código...">
+    <div class="topbar">
+      <a href="#" id="menuBtn" class="logo-badge">
+        <span class="jacare-icon">🐊</span>
+        <span class="jacare-word">Jacaré<span class="jacare-sub">BIKE STORE</span></span>
+      </a>
+      <div class="search-box">
+        <input id="searchInput" type="text" placeholder="Buscar produto ou código...">
+      </div>
+      <div class="topbar-links">
+        <a class="topbar-link" href="https://wa.me/555194285149" target="_blank" rel="noopener">
+          <span class="topbar-icon">🎧</span>
+          <span>Central de<br>Atendimento</span>
+        </a>
+        <button class="topbar-link cart-link" id="cartBtn">
+          <span class="topbar-icon">🛒<span class="badge hidden" id="cartBadge">0</span></span>
+          <span>Meu<br>Carrinho</span>
+        </button>
+      </div>
     </div>
-    <div class="header-spacer"></div>
-    <button class="cart-btn" id="cartBtn" aria-label="Carrinho">
-      🛒<span class="badge hidden" id="cartBadge">0</span>
-    </button>
-    <button class="menu-btn" id="menuBtnTop">MENU</button>
+    <nav class="navbar">
+      <button class="nav-link" id="menuBtnTop">Menu ▾</button>
+      <button class="nav-link" id="navBicicletas">Bicicletas</button>
+      <div class="nav-dropdown">
+        <button class="nav-link">Peças e Componentes ▾</button>
+        <div class="nav-dropdown-panel" id="navPecas"></div>
+      </div>
+      <div class="nav-dropdown">
+        <button class="nav-link">Acessórios ▾</button>
+        <div class="nav-dropdown-panel" id="navAcessorios"></div>
+      </div>
+      <button class="nav-link nav-builder" id="navBuilder">🔧 Monte sua Bicicleta</button>
+    </nav>
   </header>
 
   <main id="app"></main>
   <div id="cartOverlayRoot"></div>
 
   <footer class="site-footer">
-    <div class="brand">🐊 JACARÉ <span>BIKE STORE</span></div>
-    <div>+55 51 94285149 · Av. Thomas Edison, 1760 - Scharlau, São Leopoldo/RS · @jacarebikestore</div>
+    <div class="footer-cols">
+      <div class="footer-col">
+        <h4>Institucional</h4>
+        <a href="#">Política de Privacidade</a>
+        <a href="#">Política de Entrega</a>
+        <a href="#">Fale Conosco</a>
+      </div>
+      <div class="footer-col">
+        <h4>Dúvidas</h4>
+        <a href="#">Troca, Devolução, Garantia</a>
+        <a href="#">Formas de Pagamento</a>
+      </div>
+      <div class="footer-col">
+        <h4>Compras</h4>
+        <a href="#">Meus Pedidos</a>
+        <a href="#">Rastrear Pedido</a>
+      </div>
+      <div class="footer-col">
+        <h4>Atendimento</h4>
+        <a href="https://wa.me/555194285149" target="_blank" rel="noopener">📱 +55 51 94285149</a>
+        <a href="#">✉️ contato@jacarebikestore.com.br</a>
+        <span>📍 Av. Thomas Edison, 1760 - Scharlau, São Leopoldo/RS</span>
+      </div>
+      <div class="footer-col">
+        <h4>Redes Sociais</h4>
+        <a href="https://www.instagram.com/jacarebikestore/" target="_blank" rel="noopener">📷 @jacarebikestore</a>
+      </div>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-bottom">
+      <div class="brand">🐊 JACARÉ <span>BIKE STORE</span></div>
+      <div class="footer-copy">© Todos os direitos reservados - Jacaré Bike Store - 2026</div>
+    </div>
     <div class="disclaimer">
       Este é um modelo de demonstração de loja online para a Jacaré Bike Store,
       com uma amostra de categorias e produtos reais (via catálogo de fornecedor),

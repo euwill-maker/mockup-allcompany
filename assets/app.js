@@ -121,14 +121,34 @@ function renderHome() {
 
   app.innerHTML = `
     <div class="hero">
+      <div class="hero-shape"></div>
       <div class="hero-inner">
         <div class="hero-text">
           <span class="eyebrow">SÃO LEOPOLDO/RS</span>
-          <h1>SUA BIKE, DO JEITO QUE VOCÊ QUISER</h1>
-          <p>Loja online da Jacaré Bike Store. Escolha uma categoria ou monte sua bicicleta peça por peça, e feche o pedido direto pelo WhatsApp.</p>
+          <h1>SUA BIKE, DO JEITO<br>QUE VOCÊ QUISER</h1>
+          <p>Escolha uma categoria ou monte sua bicicleta peça por peça, e feche o pedido direto pelo WhatsApp.</p>
+          <button class="hero-cta" id="heroBuilderBtn">MONTAR MINHA BIKE →</button>
         </div>
         <div class="hero-photo"><img src="assets/pages/hero-bg.jpg" alt=""></div>
       </div>
+    </div>
+
+    <div class="benefits-bar">
+      <div class="benefit"><span class="benefit-icon">🚚</span><div><strong>Entrega</strong><span>Consulte a região</span></div></div>
+      <div class="benefit"><span class="benefit-icon">🏆</span><div><strong>Revenda Autorizada</strong><span>Oggi e Absolute</span></div></div>
+      <div class="benefit"><span class="benefit-icon">🔧</span><div><strong>Assistência Técnica</strong><span>Mecânica especializada</span></div></div>
+      <div class="benefit"><span class="benefit-icon">💬</span><div><strong>Atendimento</strong><span>WhatsApp e loja física</span></div></div>
+    </div>
+
+    <div class="cat-icons-row">
+      ${["quadros","rodas","pneus","capacetes","selins","freios","acessorios","bombas"].map(id => {
+        const cat = CATEGORIES.find(c => c.id === id);
+        return cat ? `
+          <div class="cat-icon" data-cat="${cat.id}">
+            <div class="cat-icon-photo"><img src="${CATEGORY_COVER[cat.id]}" alt="${cat.name}"></div>
+            <span>${cat.name}</span>
+          </div>` : "";
+      }).join("")}
     </div>
 
     <div class="builder-cta">
@@ -163,7 +183,11 @@ function renderHome() {
   app.querySelectorAll(".cat-card[data-cat]").forEach(el => {
     el.addEventListener("click", () => renderCategory(el.dataset.cat));
   });
+  app.querySelectorAll(".cat-icon[data-cat]").forEach(el => {
+    el.addEventListener("click", () => renderCategory(el.dataset.cat));
+  });
   document.getElementById("startBuilderBtn").addEventListener("click", () => startBuilder());
+  document.getElementById("heroBuilderBtn").addEventListener("click", () => startBuilder());
 }
 
 function bikeInquiryLink(bike) {
@@ -175,10 +199,13 @@ function productCardHtml(p) {
   const inCart = isInCart(p);
   return `
     <div class="product-card">
-      <div class="thumb"><img src="${p.img}" alt="${p.name}" loading="lazy"></div>
+      <div class="thumb">
+        <button class="fav-btn" aria-label="Favoritar" type="button">♡</button>
+        <img src="${p.img}" alt="${p.name}" loading="lazy">
+      </div>
       <div class="info">
-        <div class="sku">${p.sku}</div>
         <div class="name">${p.name}</div>
+        <div class="sku">Cód. ${p.sku}</div>
         <div class="price">${money(p.price)}</div>
         <button class="add-btn ${inCart ? "in-cart" : ""}" data-key="${productKey(p)}">
           ${inCart ? "✓ No carrinho — adicionar mais" : "Adicionar ao carrinho"}
@@ -194,6 +221,12 @@ function bindAddButtons(container, products) {
       addToCart(products[i]);
       btn.textContent = "✓ No carrinho — adicionar mais";
       btn.classList.add("in-cart");
+    });
+  });
+  container.querySelectorAll(".fav-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const active = btn.classList.toggle("active");
+      btn.textContent = active ? "♥" : "♡";
     });
   });
 }
@@ -526,6 +559,35 @@ function closeCart() {
 document.getElementById("menuBtn").addEventListener("click", renderHome);
 document.getElementById("menuBtnTop").addEventListener("click", renderHome);
 document.getElementById("cartBtn").addEventListener("click", openCart);
+
+// ---------- Nav dropdowns ----------
+const NAV_PECAS = [
+  "quadros", "rodas", "pneus", "freios", "cambios", "guidoes", "pedais", "pedivelas",
+  "cubos", "raios", "roda-livre", "mov-central", "mov-direcao", "correntes",
+  "cabos", "canotes", "manoplas", "suspensao",
+];
+const NAV_ACESSORIOS = [
+  "acessorios", "capacetes", "selins", "bombas", "squeeze", "suplementos", "gancheiras", "ferramentas",
+];
+
+function fillNavDropdown(elId, catIds) {
+  const el = document.getElementById(elId);
+  el.innerHTML = catIds.map(id => {
+    const cat = CATEGORIES.find(c => c.id === id);
+    return cat ? `<a href="#" data-cat="${cat.id}">${cat.name}</a>` : "";
+  }).join("");
+  el.querySelectorAll("a[data-cat]").forEach(a => {
+    a.addEventListener("click", (e) => { e.preventDefault(); renderCategory(a.dataset.cat); });
+  });
+}
+fillNavDropdown("navPecas", NAV_PECAS);
+fillNavDropdown("navAcessorios", NAV_ACESSORIOS);
+
+document.getElementById("navBicicletas").addEventListener("click", () => {
+  renderHome();
+  setTimeout(() => document.querySelector(".bikes-section")?.scrollIntoView({ behavior: "smooth" }), 50);
+});
+document.getElementById("navBuilder").addEventListener("click", () => startBuilder());
 
 const searchInput = document.getElementById("searchInput");
 let searchTimer;
