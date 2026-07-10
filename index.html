@@ -15,14 +15,18 @@
       </a>
       <div class="search-box">
         <input id="searchInput" type="text" placeholder="Buscar produto ou código...">
+        <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
       </div>
       <div class="topbar-links">
         <a class="topbar-link" href="https://wa.me/555194285149" target="_blank" rel="noopener">
-          <span class="topbar-icon">🎧</span>
+          <svg class="topbar-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14v-2a8 8 0 0116 0v2"></path><path d="M2 15a2 2 0 012-2h1a1 1 0 011 1v4a1 1 0 01-1 1H4a2 2 0 01-2-2v-2z"></path><path d="M22 15a2 2 0 00-2-2h-1a1 1 0 00-1 1v4a1 1 0 001 1h1a2 2 0 002-2v-2z"></path></svg>
           <span>Central de<br>Atendimento</span>
         </a>
         <button class="topbar-link cart-link" id="cartBtn">
-          <span class="topbar-icon">🛒<span class="badge hidden" id="cartBadge">0</span></span>
+          <span class="topbar-icon-wrap">
+            <svg class="topbar-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.4"></circle><circle cx="17" cy="20" r="1.4"></circle><path d="M2.5 3h2l2.3 12a2 2 0 002 1.6h7.6a2 2 0 002-1.6L20 7.5H6"></path></svg>
+            <span class="badge hidden" id="cartBadge">0</span>
+          </span>
           <span>Meu<br>Carrinho</span>
         </button>
       </div>
@@ -30,20 +34,24 @@
     <nav class="navbar">
       <div class="navbar-inner">
         <div class="navbar-main">
-          <button class="nav-link" id="menuBtnTop"><span class="nav-menu-icon">☰</span>Todas as categorias</button>
+          <button class="nav-link" id="menuBtnTop">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+            Todas as categorias
+          </button>
           <span class="nav-sep"></span>
           <button class="nav-link" id="navBicicletas">Bicicletas</button>
           <div class="nav-dropdown">
-            <button class="nav-link">Peças e Componentes<svg class="nav-chevron" viewBox="0 0 10 6"><path d="M1 1l4 4 4-4"/></svg></button>
+            <button class="nav-link has-chevron">Peças e Componentes</button>
             <div class="nav-dropdown-panel" id="navPecas"></div>
           </div>
           <div class="nav-dropdown">
-            <button class="nav-link">Acessórios<svg class="nav-chevron" viewBox="0 0 10 6"><path d="M1 1l4 4 4-4"/></svg></button>
+            <button class="nav-link has-chevron">Acessórios</button>
             <div class="nav-dropdown-panel" id="navAcessorios"></div>
           </div>
         </div>
         <button class="nav-builder-badge" id="navBuilder">
-          <span class="nav-builder-icon">🔧</span> Monte sua Bicicleta
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 00-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 005.4-5.4l-2.8 2.8-2-2z"></path></svg>
+          Monte sua Bicicleta
         </button>
       </div>
     </nav>
