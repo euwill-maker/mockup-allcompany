@@ -28,17 +28,24 @@
       </div>
     </div>
     <nav class="navbar">
-      <button class="nav-link" id="menuBtnTop">Menu ▾</button>
-      <button class="nav-link" id="navBicicletas">Bicicletas</button>
-      <div class="nav-dropdown">
-        <button class="nav-link">Peças e Componentes ▾</button>
-        <div class="nav-dropdown-panel" id="navPecas"></div>
+      <div class="navbar-inner">
+        <div class="navbar-main">
+          <button class="nav-link" id="menuBtnTop"><span class="nav-menu-icon">☰</span>Todas as categorias</button>
+          <span class="nav-sep"></span>
+          <button class="nav-link" id="navBicicletas">Bicicletas</button>
+          <div class="nav-dropdown">
+            <button class="nav-link">Peças e Componentes<svg class="nav-chevron" viewBox="0 0 10 6"><path d="M1 1l4 4 4-4"/></svg></button>
+            <div class="nav-dropdown-panel" id="navPecas"></div>
+          </div>
+          <div class="nav-dropdown">
+            <button class="nav-link">Acessórios<svg class="nav-chevron" viewBox="0 0 10 6"><path d="M1 1l4 4 4-4"/></svg></button>
+            <div class="nav-dropdown-panel" id="navAcessorios"></div>
+          </div>
+        </div>
+        <button class="nav-builder-badge" id="navBuilder">
+          <span class="nav-builder-icon">🔧</span> Monte sua Bicicleta
+        </button>
       </div>
-      <div class="nav-dropdown">
-        <button class="nav-link">Acessórios ▾</button>
-        <div class="nav-dropdown-panel" id="navAcessorios"></div>
-      </div>
-      <button class="nav-link nav-builder" id="navBuilder">🔧 Monte sua Bicicleta</button>
     </nav>
   </header>
 
