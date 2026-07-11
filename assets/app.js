@@ -111,18 +111,9 @@ function renderHome() {
   `)).join("");
 
   app.innerHTML = `
-    <div class="hero">
-      <div class="hero-shape"></div>
-      <div class="hero-inner">
-        <div class="hero-text">
-          <span class="eyebrow">SÃO LEOPOLDO/RS</span>
-          <h1>SUA BIKE, DO JEITO<br>QUE VOCÊ QUISER</h1>
-          <p>Escolha uma categoria ou monte sua bicicleta peça por peça, e feche o pedido direto pelo WhatsApp.</p>
-          <button class="hero-cta" id="heroBuilderBtn">MONTAR MINHA BIKE →</button>
-        </div>
-        <div class="hero-photo"><img src="assets/pages/hero-bg.jpg" alt=""></div>
-      </div>
-    </div>
+    <button class="hero-banner" id="heroBuilderBtn" aria-label="Monte sua bicicleta">
+      <img src="assets/brand/hero-banner.jpg" alt="Jacaré Bike Store — Liberdade sobre duas rodas">
+    </button>
 
     <div class="benefits-bar">
       <div class="benefit"><span class="benefit-icon">🚚</span><div><strong>Entrega</strong><span>Consulte a região</span></div></div>
