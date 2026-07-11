@@ -116,21 +116,40 @@ function renderHome() {
     </button>
 
     <div class="benefits-bar">
-      <div class="benefit"><span class="benefit-icon">🚚</span><div><strong>Entrega</strong><span>Consulte a região</span></div></div>
-      <div class="benefit"><span class="benefit-icon">🏆</span><div><strong>Revenda Autorizada</strong><span>Oggi e Absolute</span></div></div>
-      <div class="benefit"><span class="benefit-icon">🔧</span><div><strong>Assistência Técnica</strong><span>Mecânica especializada</span></div></div>
-      <div class="benefit"><span class="benefit-icon">💬</span><div><strong>Atendimento</strong><span>WhatsApp e loja física</span></div></div>
+      <div class="benefit">
+        <span class="benefit-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="6" width="14" height="11"></rect><path d="M15 10h4l3 3v4h-7z"></path><circle cx="6" cy="19" r="2"></circle><circle cx="18" cy="19" r="2"></circle></svg></span>
+        <div><strong>Entrega</strong><span>Consulte a região</span></div>
+      </div>
+      <span class="benefit-sep"></span>
+      <div class="benefit">
+        <span class="benefit-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"></circle><path d="M8.2 13.5L7 22l5-3 5 3-1.2-8.5"></path></svg></span>
+        <div><strong>Revenda Autorizada</strong><span>Oggi e Absolute</span></div>
+      </div>
+      <span class="benefit-sep"></span>
+      <div class="benefit">
+        <span class="benefit-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 00-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 005.4-5.4l-2.8 2.8-2-2z"></path></svg></span>
+        <div><strong>Assistência Técnica</strong><span>Mecânica especializada</span></div>
+      </div>
+      <span class="benefit-sep"></span>
+      <div class="benefit">
+        <span class="benefit-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"></path></svg></span>
+        <div><strong>Atendimento</strong><span>WhatsApp e loja física</span></div>
+      </div>
     </div>
 
-    <div class="cat-icons-row">
-      ${["quadros","rodas","pneus","capacetes","selins","freios","acessorios","bombas"].map(id => {
-        const cat = CATEGORIES.find(c => c.id === id);
-        return cat ? `
-          <div class="cat-icon" data-cat="${cat.id}">
-            <div class="cat-icon-photo"><img src="${CATEGORY_COVER[cat.id]}" alt="${cat.name}"></div>
-            <span>${cat.name}</span>
-          </div>` : "";
-      }).join("")}
+    <div class="cats-section">
+      <div class="section-title center">Compre por Categoria</div>
+      <div class="section-sub center">Acesso rápido às peças mais procuradas</div>
+      <div class="cat-icons-row">
+        ${["quadros","rodas","pneus","capacetes","selins","freios","acessorios","bombas"].map(id => {
+          const cat = CATEGORIES.find(c => c.id === id);
+          return cat ? `
+            <div class="cat-icon" data-cat="${cat.id}">
+              <div class="cat-icon-photo"><img src="${CATEGORY_COVER[cat.id]}" alt="${cat.name}"></div>
+              <span>${cat.name}</span>
+            </div>` : "";
+        }).join("")}
+      </div>
     </div>
 
     <div class="builder-cta">
