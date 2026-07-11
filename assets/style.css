@@ -38,18 +38,12 @@ button { font-family: inherit; }
 
 .logo-badge {
   display: flex;
-  align-items: baseline;
-  gap: 6px;
-  font-weight: 800;
-  letter-spacing: 0.5px;
+  align-items: center;
   white-space: nowrap;
+  flex-shrink: 0;
 }
-.jacare-icon { font-size: 24px; line-height: 1; }
-.jacare-word {
-  font-size: 20px; font-weight: 800; color: var(--red);
-  display: flex; flex-direction: column; line-height: 1.05;
-}
-.jacare-sub { font-size: 9px; color: var(--green); letter-spacing: 2px; font-weight: 700; }
+.logo-img { height: 46px; width: auto; border-radius: 6px; }
+.footer-logo-img { height: 40px; width: auto; border-radius: 6px; }
 
 .search-box { position: relative; flex: 1; max-width: 520px; }
 .search-box input {
