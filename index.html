@@ -21,6 +21,17 @@
           <svg class="topbar-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14v-2a8 8 0 0116 0v2"></path><path d="M2 15a2 2 0 012-2h1a1 1 0 011 1v4a1 1 0 01-1 1H4a2 2 0 01-2-2v-2z"></path><path d="M22 15a2 2 0 00-2-2h-1a1 1 0 00-1 1v4a1 1 0 001 1h1a2 2 0 002-2v-2z"></path></svg>
           <span>Central de<br>Atendimento</span>
         </a>
+        <button class="topbar-link" id="accountBtn" type="button">
+          <svg class="topbar-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"></circle><path d="M4 21v-1a8 8 0 0116 0v1"></path></svg>
+          <span>Bem-vindo(a)<br>Entrar ou Cadastrar</span>
+        </button>
+        <button class="topbar-link" id="favBtn">
+          <span class="topbar-icon-wrap">
+            <svg class="topbar-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 00-7.8 0L12 5.6l-1-1a5.5 5.5 0 00-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 000-7.8z"></path></svg>
+            <span class="badge hidden" id="favBadge">0</span>
+          </span>
+          <span>Lista de<br>Favoritos</span>
+        </button>
         <button class="topbar-link cart-link" id="cartBtn">
           <span class="topbar-icon-wrap">
             <svg class="topbar-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.4"></circle><circle cx="17" cy="20" r="1.4"></circle><path d="M2.5 3h2l2.3 12a2 2 0 002 1.6h7.6a2 2 0 002-1.6L20 7.5H6"></path></svg>
@@ -33,12 +44,17 @@
     <nav class="navbar">
       <div class="navbar-inner">
         <div class="navbar-main">
-          <button class="nav-link" id="menuBtnTop">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
-            Todas as categorias
-          </button>
-          <span class="nav-sep"></span>
-          <button class="nav-link" id="navBicicletas">Bicicletas</button>
+          <div class="nav-dropdown">
+            <button class="nav-link has-chevron" id="menuBtnTop">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+              Menu
+            </button>
+            <div class="nav-dropdown-panel" id="navAllCats"></div>
+          </div>
+          <div class="nav-dropdown">
+            <button class="nav-link has-chevron" id="navBicicletas">Bicicletas</button>
+            <div class="nav-dropdown-panel" id="navBikesPanel"></div>
+          </div>
           <div class="nav-dropdown">
             <button class="nav-link has-chevron">Peças e Componentes</button>
             <div class="nav-dropdown-panel" id="navPecas"></div>

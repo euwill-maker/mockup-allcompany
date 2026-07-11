@@ -129,6 +129,10 @@ button { font-family: inherit; }
   display: block; padding: 9px 18px; font-size: 13px; font-weight: 600; color: var(--black);
 }
 .nav-dropdown-panel a:hover { background: var(--paper); color: var(--red); }
+#navAllCats {
+  display: grid; grid-template-columns: repeat(2, minmax(190px, 1fr));
+  min-width: 460px; max-height: 420px; gap: 0 4px;
+}
 
 .nav-builder-badge {
   background: var(--green); color: #171200; border: none; cursor: pointer;

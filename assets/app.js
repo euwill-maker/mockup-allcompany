@@ -98,7 +98,7 @@ function renderHome() {
   const bikeCards = BIKES.flatMap(b => b.colors.map((c, ci) => `
     <div class="product-card">
       <div class="thumb" data-open-bike="${b.id}" data-color-idx="${ci}">
-        <button class="fav-btn" aria-label="Favoritar" type="button">♡</button>
+        <button class="fav-btn ${favorites.has('bike__' + b.id + '__' + ci) ? 'active' : ''}" data-fav="bike__${b.id}__${ci}" aria-label="Favoritar" type="button">${favorites.has('bike__' + b.id + '__' + ci) ? '♥' : '♡'}</button>
         <img src="${c.img}" alt="${b.name} ${c.name}" loading="lazy">
       </div>
       <div class="info">
@@ -180,10 +180,7 @@ function renderHome() {
   bindAddButtons(document.getElementById("carousel-capacetes"), PRODUCTS.filter(p => p.cat === "capacetes"));
   bindAddButtons(document.getElementById("carousel-selins"), PRODUCTS.filter(p => p.cat === "selins"));
   document.getElementById("carousel-bicicletas-prontas")?.querySelectorAll(".fav-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
-      const active = btn.classList.toggle("active");
-      btn.textContent = active ? "♥" : "♡";
-    });
+    btn.addEventListener("click", () => toggleFavorite(btn.dataset.fav, btn));
   });
   document.getElementById("carousel-bicicletas-prontas")?.querySelectorAll("[data-open-bike]").forEach(el => {
     el.style.cursor = "pointer";
@@ -225,10 +222,12 @@ function bikeInquiryLink(bike, color) {
 
 function productCardHtml(p) {
   const inCart = isInCart(p);
+  const favKey = productKey(p);
+  const isFav = favorites.has(favKey);
   return `
     <div class="product-card">
-      <div class="thumb" data-open="${productKey(p)}">
-        <button class="fav-btn" aria-label="Favoritar" type="button">♡</button>
+      <div class="thumb" data-open="${favKey}">
+        <button class="fav-btn ${isFav ? 'active' : ''}" data-fav="${favKey}" aria-label="Favoritar" type="button">${isFav ? '♥' : '♡'}</button>
         <img src="${p.img}" alt="${p.name}" loading="lazy">
       </div>
       <div class="info">
@@ -252,10 +251,7 @@ function bindAddButtons(container, products) {
     });
   });
   container.querySelectorAll(".fav-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
-      const active = btn.classList.toggle("active");
-      btn.textContent = active ? "♥" : "♡";
-    });
+    btn.addEventListener("click", () => toggleFavorite(btn.dataset.fav, btn));
   });
   container.querySelectorAll("[data-open]").forEach(el => {
     el.style.cursor = "pointer";
@@ -749,12 +745,40 @@ function fillNavDropdown(elId, catIds) {
 }
 fillNavDropdown("navPecas", NAV_PECAS);
 fillNavDropdown("navAcessorios", NAV_ACESSORIOS);
+fillNavDropdown("navAllCats", [...NAV_PECAS, ...NAV_ACESSORIOS]);
 
-document.getElementById("navBicicletas").addEventListener("click", () => {
+const navBikesPanel = document.getElementById("navBikesPanel");
+navBikesPanel.innerHTML = BIKES.map(b => `<a href="#" data-bike="${b.id}">${b.name}</a>`).join("")
+  + `<a href="#" id="navBikesAll">Ver todos</a>`;
+navBikesPanel.querySelectorAll("a[data-bike]").forEach(a => {
+  a.addEventListener("click", (e) => { e.preventDefault(); renderBikeDetail(a.dataset.bike, 0); });
+});
+
+function scrollToBikes() {
   renderHome();
-  setTimeout(() => document.querySelector(".bikes-section")?.scrollIntoView({ behavior: "smooth" }), 50);
+  setTimeout(() => document.getElementById("carousel-bicicletas-prontas")?.closest(".carousel-section")?.scrollIntoView({ behavior: "smooth" }), 50);
+}
+document.getElementById("navBicicletas").addEventListener("click", scrollToBikes);
+document.getElementById("navBikesPanel").addEventListener("click", (e) => {
+  if (e.target.id === "navBikesAll") { e.preventDefault(); scrollToBikes(); }
 });
 document.getElementById("navBuilder").addEventListener("click", () => startBuilder());
+
+// ---------- Favorites (persisted) ----------
+let favorites = new Set();
+try { favorites = new Set(JSON.parse(localStorage.getItem("allcompany_favs") || "[]")); } catch (e) {}
+function updateFavBadge() {
+  const badge = document.getElementById("favBadge");
+  badge.textContent = favorites.size;
+  badge.classList.toggle("hidden", favorites.size === 0);
+}
+function toggleFavorite(key, btn) {
+  if (favorites.has(key)) { favorites.delete(key); btn.classList.remove("active"); btn.textContent = "♡"; }
+  else { favorites.add(key); btn.classList.add("active"); btn.textContent = "♥"; }
+  localStorage.setItem("allcompany_favs", JSON.stringify([...favorites]));
+  updateFavBadge();
+}
+updateFavBadge();
 
 const searchInput = document.getElementById("searchInput");
 let searchTimer;
