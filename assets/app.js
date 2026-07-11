@@ -95,14 +95,14 @@ function renderHome() {
   closeCart();
   const soonChips = COMING_SOON_CATEGORIES.map(name => `<span class="soon-chip">${name}</span>`).join("");
 
-  const bikeCards = BIKES.flatMap(b => b.colors.map(c => `
+  const bikeCards = BIKES.flatMap(b => b.colors.map((c, ci) => `
     <div class="product-card">
-      <div class="thumb">
+      <div class="thumb" data-open-bike="${b.id}" data-color-idx="${ci}">
         <button class="fav-btn" aria-label="Favoritar" type="button">♡</button>
         <img src="${c.img}" alt="${b.name} ${c.name}" loading="lazy">
       </div>
       <div class="info">
-        <div class="name">${b.name} — ${c.name}</div>
+        <div class="name" data-open-bike="${b.id}" data-color-idx="${ci}">${b.name} — ${c.name}</div>
         <ul class="bike-card-specs">${b.specs.slice(0, 2).map(s => `<li>${s}</li>`).join("")}</ul>
         <div class="price price-inquiry">Sob consulta</div>
         <a class="add-btn" target="_blank" rel="noopener" href="${bikeInquiryLink(b, c)}">Consultar no WhatsApp</a>
@@ -185,6 +185,10 @@ function renderHome() {
       btn.textContent = active ? "♥" : "♡";
     });
   });
+  document.getElementById("carousel-bicicletas-prontas")?.querySelectorAll("[data-open-bike]").forEach(el => {
+    el.style.cursor = "pointer";
+    el.addEventListener("click", () => renderBikeDetail(el.dataset.openBike, Number(el.dataset.colorIdx)));
+  });
   app.querySelectorAll(".carousel-arrow").forEach(btn => {
     btn.addEventListener("click", () => {
       const track = document.getElementById(btn.dataset.target);
@@ -223,12 +227,12 @@ function productCardHtml(p) {
   const inCart = isInCart(p);
   return `
     <div class="product-card">
-      <div class="thumb">
+      <div class="thumb" data-open="${productKey(p)}">
         <button class="fav-btn" aria-label="Favoritar" type="button">♡</button>
         <img src="${p.img}" alt="${p.name}" loading="lazy">
       </div>
       <div class="info">
-        <div class="name">${p.name}</div>
+        <div class="name" data-open="${productKey(p)}">${p.name}</div>
         <div class="sku">Cód. ${p.sku}</div>
         <div class="price">${money(p.price)}</div>
         <button class="add-btn ${inCart ? "in-cart" : ""}" data-key="${productKey(p)}">
@@ -253,6 +257,12 @@ function bindAddButtons(container, products) {
       btn.textContent = active ? "♥" : "♡";
     });
   });
+  container.querySelectorAll("[data-open]").forEach(el => {
+    el.style.cursor = "pointer";
+    const key = el.dataset.open;
+    const product = products.find(p => productKey(p) === key);
+    if (product) el.addEventListener("click", () => renderProductDetail(product));
+  });
 }
 
 function renderCategory(catId) {
@@ -272,6 +282,139 @@ function renderCategory(catId) {
 
   document.getElementById("backBtn").addEventListener("click", renderHome);
   bindAddButtons(app.querySelector(".product-grid"), products);
+  window.scrollTo(0, 0);
+}
+
+function renderProductDetail(product) {
+  const cat = CATEGORIES.find(c => c.id === product.cat);
+  const related = PRODUCTS.filter(p => p.cat === product.cat && p !== product).slice(0, 10);
+  const inCart = isInCart(product);
+
+  app.innerHTML = `
+    <div class="pdp">
+      <div class="breadcrumb">
+        <button id="backHomeBtn">Menu</button> /
+        <button id="backCatBtn">${cat.name}</button> /
+        ${product.name}
+      </div>
+      <div class="pdp-grid">
+        <div class="pdp-gallery"><img src="${product.img}" alt="${product.name}"></div>
+        <div class="pdp-buy">
+          <h1>${product.name}</h1>
+          <div class="pdp-code">Cód. do Produto: ${product.sku}</div>
+          <div class="pdp-price">${money(product.price)}</div>
+          <button class="add-btn pdp-add-btn ${inCart ? "in-cart" : ""}" id="pdpAddBtn">
+            ${inCart ? "✓ No carrinho — adicionar mais" : "Adicionar ao carrinho"}
+          </button>
+          <div class="pdp-note">Fechamos o pedido direto pelo WhatsApp — sem pagamento online neste modelo de demonstração.</div>
+        </div>
+      </div>
+
+      <div class="pdp-description">
+        <h2>Descrição do Produto</h2>
+        <p>${product.name}</p>
+        <div class="pdp-meta">Categoria: <strong>${cat.name}</strong> · Código: <strong>${product.sku}</strong></div>
+      </div>
+
+      ${related.length ? `
+      <div class="carousel-section" style="padding-left:0;padding-right:0;">
+        <div class="carousel-header"><div class="section-title">Você também pode gostar de</div></div>
+        <div class="carousel-wrap">
+          <button class="carousel-arrow prev" data-target="pdp-related" aria-label="Anterior">‹</button>
+          <div class="carousel-track" id="pdp-related">${related.map(productCardHtml).join("")}</div>
+          <button class="carousel-arrow next" data-target="pdp-related" aria-label="Próximo">›</button>
+        </div>
+      </div>` : ""}
+    </div>
+  `;
+
+  document.getElementById("backHomeBtn").addEventListener("click", renderHome);
+  document.getElementById("backCatBtn").addEventListener("click", () => renderCategory(product.cat));
+  document.getElementById("pdpAddBtn").addEventListener("click", (e) => {
+    addToCart(product);
+    e.target.textContent = "✓ No carrinho — adicionar mais";
+    e.target.classList.add("in-cart");
+  });
+  if (related.length) bindAddButtons(document.getElementById("pdp-related"), related);
+  app.querySelectorAll(".carousel-arrow").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.getElementById(btn.dataset.target).scrollBy({ left: (btn.classList.contains("prev") ? -1 : 1) * 320, behavior: "smooth" });
+    });
+  });
+  window.scrollTo(0, 0);
+}
+
+function renderBikeDetail(bikeId, colorIdx) {
+  const bike = BIKES.find(b => b.id === bikeId);
+  const ci = colorIdx || 0;
+  const color = bike.colors[ci];
+  const others = BIKES.filter(b => b.id !== bikeId);
+
+  app.innerHTML = `
+    <div class="pdp">
+      <div class="breadcrumb">
+        <button id="backHomeBtn">Menu</button> / ${bike.name}
+      </div>
+      <div class="pdp-grid">
+        <div class="pdp-gallery"><img src="${color.img}" alt="${bike.name} ${color.name}"></div>
+        <div class="pdp-buy">
+          <h1>${bike.name}</h1>
+          <div class="pdp-price price-inquiry">Sob consulta</div>
+          <div class="pdp-color-select">
+            <strong>Selecione a Cor:</strong>
+            <div class="pdp-swatches">
+              ${bike.colors.map((c, i) => `
+                <button class="pdp-swatch ${i === ci ? "active" : ""}" data-idx="${i}" title="${c.name}">
+                  <img src="${c.img}" alt="${c.name}">
+                </button>
+              `).join("")}
+            </div>
+            <span class="pdp-color-name">${color.name}</span>
+          </div>
+          <a class="add-btn pdp-add-btn" target="_blank" rel="noopener" href="${bikeInquiryLink(bike, color)}">Consultar no WhatsApp</a>
+          <div class="pdp-note">Modelo completo — preço sob consulta, sem pagamento online neste modelo de demonstração.</div>
+        </div>
+      </div>
+
+      <div class="pdp-description">
+        <h2>Especificações</h2>
+        <ul class="pdp-specs">${bike.specs.map(s => `<li>${s}</li>`).join("")}</ul>
+      </div>
+
+      ${others.length ? `
+      <div class="carousel-section" style="padding-left:0;padding-right:0;">
+        <div class="carousel-header"><div class="section-title">Outros modelos</div></div>
+        <div class="carousel-wrap">
+          <button class="carousel-arrow prev" data-target="pdp-related-bikes" aria-label="Anterior">‹</button>
+          <div class="carousel-track" id="pdp-related-bikes">
+            ${others.flatMap(b => b.colors.slice(0, 1).map(c => `
+              <div class="product-card" data-bike="${b.id}" data-color="0" style="cursor:pointer;">
+                <div class="thumb"><img src="${c.img}" alt="${b.name}"></div>
+                <div class="info">
+                  <div class="name">${b.name}</div>
+                  <div class="price price-inquiry">Sob consulta</div>
+                </div>
+              </div>
+            `)).join("")}
+          </div>
+          <button class="carousel-arrow next" data-target="pdp-related-bikes" aria-label="Próximo">›</button>
+        </div>
+      </div>` : ""}
+    </div>
+  `;
+
+  document.getElementById("backHomeBtn").addEventListener("click", renderHome);
+  app.querySelectorAll(".pdp-swatch").forEach(btn => {
+    btn.addEventListener("click", () => renderBikeDetail(bikeId, Number(btn.dataset.idx)));
+  });
+  app.querySelectorAll("#pdp-related-bikes .product-card").forEach(card => {
+    card.addEventListener("click", () => renderBikeDetail(card.dataset.bike, Number(card.dataset.color)));
+  });
+  app.querySelectorAll(".carousel-arrow").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.getElementById(btn.dataset.target).scrollBy({ left: (btn.classList.contains("prev") ? -1 : 1) * 320, behavior: "smooth" });
+    });
+  });
   window.scrollTo(0, 0);
 }
 
