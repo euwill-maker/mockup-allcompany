@@ -93,15 +93,6 @@ const CATEGORY_COVER = {
 
 function renderHome() {
   closeCart();
-  const catCards = CATEGORIES.map(c => `
-    <div class="cat-card" data-cat="${c.id}" style="background-image:url('${CATEGORY_COVER[c.id]}')">
-      <div class="cat-card-label">
-        ${c.name}
-        <span class="count">${countByCat(c.id)} produtos</span>
-      </div>
-    </div>
-  `).join("");
-
   const soonChips = COMING_SOON_CATEGORIES.map(name => `<span class="soon-chip">${name}</span>`).join("");
 
   const bikeCards = BIKES.map(b => `
@@ -160,14 +151,6 @@ function renderHome() {
       <button class="builder-cta-btn" id="startBuilderBtn">Começar a montar →</button>
     </div>
 
-    <div id="categorias" class="category-grid">
-      <div style="grid-column: 1/-1;">
-        <div class="section-title">Categorias</div>
-        <div class="section-sub">Escolha uma categoria, adicione ao carrinho e feche o pedido pelo WhatsApp.</div>
-      </div>
-      ${catCards}
-    </div>
-
     <div class="bikes-section">
       <div class="section-title">Bicicletas prontas</div>
       <div class="section-sub">Modelos completos Sunpeed — preço sob consulta.</div>
@@ -180,9 +163,6 @@ function renderHome() {
     </details>
   `;
 
-  app.querySelectorAll(".cat-card[data-cat]").forEach(el => {
-    el.addEventListener("click", () => renderCategory(el.dataset.cat));
-  });
   app.querySelectorAll(".cat-icon[data-cat]").forEach(el => {
     el.addEventListener("click", () => renderCategory(el.dataset.cat));
   });
