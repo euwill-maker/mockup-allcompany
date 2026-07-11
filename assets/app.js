@@ -95,20 +95,20 @@ function renderHome() {
   closeCart();
   const soonChips = COMING_SOON_CATEGORIES.map(name => `<span class="soon-chip">${name}</span>`).join("");
 
-  const bikeCards = BIKES.map(b => `
-    <div class="bike-card">
-      <div class="bike-card-photo"><img src="${b.colors[0].img}" alt="${b.name}"></div>
-      <div class="bike-card-info">
-        <div class="bike-card-name">${b.name}</div>
-        <ul class="bike-card-specs">${b.specs.slice(0, 3).map(s => `<li>${s}</li>`).join("")}</ul>
-        <div class="bike-card-colors">
-          ${b.colors.map(c => `<span class="color-dot" title="${c.name}"></span>`).join("")}
-          <span class="color-label">${b.colors.map(c => c.name).join(" · ")}</span>
-        </div>
-        <a class="wa-inquire-btn" target="_blank" rel="noopener" href="${bikeInquiryLink(b)}">Consultar preço no WhatsApp</a>
+  const bikeCards = BIKES.flatMap(b => b.colors.map(c => `
+    <div class="product-card">
+      <div class="thumb">
+        <button class="fav-btn" aria-label="Favoritar" type="button">♡</button>
+        <img src="${c.img}" alt="${b.name} ${c.name}" loading="lazy">
+      </div>
+      <div class="info">
+        <div class="name">${b.name} — ${c.name}</div>
+        <ul class="bike-card-specs">${b.specs.slice(0, 2).map(s => `<li>${s}</li>`).join("")}</ul>
+        <div class="price price-inquiry">Sob consulta</div>
+        <a class="add-btn" target="_blank" rel="noopener" href="${bikeInquiryLink(b, c)}">Consultar no WhatsApp</a>
       </div>
     </div>
-  `).join("");
+  `)).join("");
 
   app.innerHTML = `
     <div class="hero">
@@ -151,11 +151,9 @@ function renderHome() {
       <button class="builder-cta-btn" id="startBuilderBtn">Começar a montar →</button>
     </div>
 
-    <div class="bikes-section">
-      <div class="section-title">Bicicletas prontas</div>
-      <div class="section-sub">Modelos completos Sunpeed — preço sob consulta.</div>
-      <div class="bike-grid">${bikeCards}</div>
-    </div>
+    ${carouselSectionHtml("Bicicletas Prontas", bikeCards, null)}
+    ${carouselSectionHtml("Capacetes", PRODUCTS.filter(p => p.cat === "capacetes").map(productCardHtml).join(""), "capacetes")}
+    ${carouselSectionHtml("Selins", PRODUCTS.filter(p => p.cat === "selins").map(productCardHtml).join(""), "selins")}
 
     <details class="soon-block">
       <summary>Ver demais categorias do catálogo (em breve)</summary>
@@ -168,10 +166,46 @@ function renderHome() {
   });
   document.getElementById("startBuilderBtn").addEventListener("click", () => startBuilder());
   document.getElementById("heroBuilderBtn").addEventListener("click", () => startBuilder());
+
+  bindAddButtons(document.getElementById("carousel-capacetes"), PRODUCTS.filter(p => p.cat === "capacetes"));
+  bindAddButtons(document.getElementById("carousel-selins"), PRODUCTS.filter(p => p.cat === "selins"));
+  document.getElementById("carousel-bicicletas-prontas")?.querySelectorAll(".fav-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const active = btn.classList.toggle("active");
+      btn.textContent = active ? "♥" : "♡";
+    });
+  });
+  app.querySelectorAll(".carousel-arrow").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const track = document.getElementById(btn.dataset.target);
+      track.scrollBy({ left: (btn.classList.contains("prev") ? -1 : 1) * 320, behavior: "smooth" });
+    });
+  });
+  app.querySelectorAll(".view-all-link[data-cat]").forEach(btn => {
+    btn.addEventListener("click", () => renderCategory(btn.dataset.cat));
+  });
 }
 
-function bikeInquiryLink(bike) {
-  const msg = `Olá! Vi no catálogo digital e tenho interesse na bicicleta ${bike.name} (${bike.colors.map(c => c.name).join(", ")}). Podem me passar o preço?`;
+function carouselSectionHtml(title, cardsHtml, viewAllCatId) {
+  const id = "carousel-" + title.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "-");
+  return `
+    <div class="carousel-section">
+      <div class="carousel-header">
+        <div class="section-title">${title}</div>
+        ${viewAllCatId ? `<button class="view-all-link" data-cat="${viewAllCatId}">ver mais ›</button>` : ""}
+      </div>
+      <div class="carousel-wrap">
+        <button class="carousel-arrow prev" data-target="${id}" aria-label="Anterior">‹</button>
+        <div class="carousel-track" id="${id}">${cardsHtml}</div>
+        <button class="carousel-arrow next" data-target="${id}" aria-label="Próximo">›</button>
+      </div>
+    </div>
+  `;
+}
+
+function bikeInquiryLink(bike, color) {
+  const colorTxt = color ? ` na cor ${color.name}` : ` (${bike.colors.map(c => c.name).join(", ")})`;
+  const msg = `Olá! Vi no catálogo digital e tenho interesse na bicicleta ${bike.name}${colorTxt}. Podem me passar o preço?`;
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
 }
 

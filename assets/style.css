@@ -412,21 +412,38 @@ details.soon-block summary {
   border-radius: 999px; font-weight: 800; font-size: 14px; cursor: pointer; white-space: nowrap;
 }
 
-/* ---------- Bicicletas prontas (home) ---------- */
-.bikes-section { max-width: 1100px; margin: 0 auto; padding: 28px 20px 8px; }
-.bike-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
-.bike-card { background: #fff; border-radius: var(--radius); overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,.06); }
-.bike-card-photo { background: #0c0c0c; }
-.bike-card-photo img { width: 100%; aspect-ratio: 16/10; object-fit: cover; }
-.bike-card-info { padding: 14px 16px 18px; }
-.bike-card-name { font-weight: 800; font-size: 16px; margin-bottom: 6px; }
-.bike-card-specs { margin: 0 0 10px; padding-left: 18px; font-size: 12px; color: var(--muted); line-height: 1.6; }
-.bike-card-colors { display: flex; align-items: center; gap: 6px; margin-bottom: 12px; }
-.color-dot { width: 10px; height: 10px; border-radius: 999px; background: var(--green); flex-shrink: 0; }
-.color-label { font-size: 11px; color: var(--muted); }
-.wa-inquire-btn {
-  display: block; text-align: center; background: var(--black); color: #fff;
-  padding: 10px; border-radius: 8px; font-size: 13px; font-weight: 700;
+/* ---------- Product carousels (home) ---------- */
+.carousel-section { max-width: 1100px; margin: 0 auto; padding: 30px 20px 6px; }
+.carousel-header {
+  display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 16px;
+}
+.carousel-header .section-title { margin: 0; }
+.view-all-link {
+  background: none; border: none; cursor: pointer; color: var(--red);
+  font-size: 13px; font-weight: 700;
+}
+.carousel-wrap { position: relative; }
+.carousel-track {
+  display: flex; gap: 14px; overflow-x: auto; scroll-behavior: smooth; scroll-snap-type: x proximity;
+  padding-bottom: 4px;
+}
+.carousel-track::-webkit-scrollbar { display: none; }
+.carousel-track .product-card { flex: 0 0 220px; scroll-snap-align: start; }
+.carousel-arrow {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  width: 34px; height: 34px; border-radius: 999px; border: 1px solid #e5e5e2;
+  background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,.1); cursor: pointer;
+  font-size: 18px; color: var(--black); z-index: 5;
+  display: flex; align-items: center; justify-content: center;
+}
+.carousel-arrow.prev { left: -14px; }
+.carousel-arrow.next { right: -14px; }
+.carousel-arrow:hover { background: var(--paper); }
+.price-inquiry { color: var(--muted); font-size: 15px; font-weight: 700; }
+.bike-card-specs { margin: 2px 0 0; padding-left: 16px; font-size: 11px; color: var(--muted); line-height: 1.5; }
+
+@media (max-width: 640px) {
+  .carousel-arrow { display: none; }
 }
 
 /* ---------- Bike Builder wizard ---------- */
