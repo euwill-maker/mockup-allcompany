@@ -130,9 +130,10 @@ button { font-family: inherit; }
 }
 .nav-dropdown-panel a:hover { background: var(--paper); color: var(--red); }
 #navAllCats {
-  display: grid; grid-template-columns: repeat(2, minmax(190px, 1fr));
+  grid-template-columns: repeat(2, minmax(190px, 1fr));
   min-width: 460px; max-height: 420px; gap: 0 4px;
 }
+.nav-dropdown:hover #navAllCats { display: grid; }
 
 .nav-builder-badge {
   background: var(--green); color: #171200; border: none; cursor: pointer;
