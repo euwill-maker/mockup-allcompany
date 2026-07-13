@@ -436,13 +436,13 @@ function renderSearch(query) {
 
 // ---------- Bike Builder ("Monte sua Bicicleta") ----------
 const BUILDER_STEPS = [
-  { key: "quadros", label: "Quadro", parts: ["bp-frame"] },
-  { key: "rodas", label: "Rodas & Aros", parts: ["bp-rim-f", "bp-rim-r"] },
-  { key: "pneus", label: "Pneus", parts: ["bp-tire-f", "bp-tire-r"] },
-  { key: "freios", label: "Freios", parts: ["bp-brake-f", "bp-brake-r"] },
-  { key: "cambios", label: "Câmbio & Alavanca", parts: ["bp-drivetrain"] },
-  { key: "guidoes", label: "Guidão", parts: ["bp-handlebar"] },
-  { key: "selins", label: "Selim", parts: ["bp-saddle"] },
+  { key: "quadros", label: "Quadro" },
+  { key: "rodas", label: "Rodas & Aros" },
+  { key: "pneus", label: "Pneus" },
+  { key: "freios", label: "Freios" },
+  { key: "cambios", label: "Câmbio & Alavanca" },
+  { key: "guidoes", label: "Guidão" },
+  { key: "selins", label: "Selim" },
 ];
 
 let builderChoices = {};
@@ -454,73 +454,32 @@ function startBuilder() {
   renderBuilderStep();
 }
 
-function spokeLines(cx, cy, rInner, rOuter, count) {
-  let out = "";
-  for (let i = 0; i < count; i++) {
-    const a = (Math.PI * 2 * i) / count;
-    const x1 = cx + Math.cos(a) * rInner, y1 = cy + Math.sin(a) * rInner;
-    const x2 = cx + Math.cos(a) * rOuter, y2 = cy + Math.sin(a) * rOuter;
-    out += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}"></line>`;
-  }
-  return out;
-}
-
-function bikeSvgMarkup(activeParts) {
-  const cls = (name) => `bp-part ${name}${activeParts.includes(name) ? " active" : ""}`;
-  const rearHub = [42, 95], frontHub = [218, 95];
-  const bb = [113, 95], seatTop = [92, 38], headTop = [166, 50], headBot = [171, 60];
-
+function builderProgressHtml() {
+  const total = BUILDER_STEPS.length;
+  const done = BUILDER_STEPS.filter(s => builderChoices[s.key]).length;
+  const pct = Math.round((done / total) * 100);
+  const r = 54, c = 2 * Math.PI * r;
+  const offset = c - (pct / 100) * c;
+  const complete = done === total;
   return `
-  <svg viewBox="0 0 260 130" class="bike-svg" xmlns="http://www.w3.org/2000/svg">
-    <ellipse class="bike-shadow" cx="130" cy="122" rx="100" ry="6"></ellipse>
-
-    <g class="${cls("bp-tire-r")}"><circle cx="${rearHub[0]}" cy="${rearHub[1]}" r="32"></circle></g>
-    <g class="${cls("bp-tire-f")}"><circle cx="${frontHub[0]}" cy="${frontHub[1]}" r="32"></circle></g>
-    <g class="${cls("bp-rim-r")}">
-      <circle cx="${rearHub[0]}" cy="${rearHub[1]}" r="20"></circle>
-      ${spokeLines(rearHub[0], rearHub[1], 4, 19, 10)}
-      <circle cx="${rearHub[0]}" cy="${rearHub[1]}" r="4" class="hub-dot"></circle>
-    </g>
-    <g class="${cls("bp-rim-f")}">
-      <circle cx="${frontHub[0]}" cy="${frontHub[1]}" r="20"></circle>
-      ${spokeLines(frontHub[0], frontHub[1], 4, 19, 10)}
-      <circle cx="${frontHub[0]}" cy="${frontHub[1]}" r="4" class="hub-dot"></circle>
-    </g>
-
-    <g class="${cls("bp-frame")}">
-      <line x1="${rearHub[0]}" y1="${rearHub[1]}" x2="${bb[0]}" y2="${bb[1]}"></line>
-      <line x1="${bb[0]}" y1="${bb[1]}" x2="${seatTop[0]}" y2="${seatTop[1]}"></line>
-      <line x1="${rearHub[0]}" y1="${rearHub[1]}" x2="${seatTop[0]}" y2="${seatTop[1]}"></line>
-      <line x1="${seatTop[0]}" y1="${seatTop[1]}" x2="${headTop[0]}" y2="${headTop[1]}"></line>
-      <line x1="${bb[0]}" y1="${bb[1]}" x2="${headBot[0]}" y2="${headBot[1]}"></line>
-      <line class="fork" x1="${headBot[0]}" y1="${headBot[1]}" x2="${frontHub[0]}" y2="${frontHub[1]}"></line>
-    </g>
-
-    <g class="${cls("bp-drivetrain")}">
-      <circle cx="${bb[0]}" cy="${bb[1]}" r="10"></circle>
-    </g>
-
-    <g class="${cls("bp-handlebar")}">
-      <line x1="${headTop[0]}" y1="${headTop[1]}" x2="${headTop[0]+3}" y2="${headTop[1]-22}"></line>
-      <line x1="${headTop[0]-10}" y1="${headTop[1]-20}" x2="${headTop[0]+16}" y2="${headTop[1]-20}"></line>
-    </g>
-
-    <g class="${cls("bp-saddle")}">
-      <line x1="${seatTop[0]}" y1="${seatTop[1]}" x2="${seatTop[0]}" y2="${seatTop[1]-10}"></line>
-      <rect x="${seatTop[0]-15}" y="${seatTop[1]-15}" width="28" height="7" rx="3.5"></rect>
-    </g>
-
-    <g class="${cls("bp-brake-r")}"><rect x="${rearHub[0]-5}" y="${rearHub[1]-30}" width="11" height="9" rx="2.5"></rect></g>
-    <g class="${cls("bp-brake-f")}"><rect x="${frontHub[0]-6}" y="${frontHub[1]-30}" width="11" height="9" rx="2.5"></rect></g>
-  </svg>`;
-}
-
-function builderActiveParts() {
-  let parts = [];
-  BUILDER_STEPS.forEach(step => {
-    if (builderChoices[step.key]) parts = parts.concat(step.parts);
-  });
-  return parts;
+    <div class="builder-progress">
+      <div class="progress-ring">
+        <svg viewBox="0 0 130 130">
+          <circle class="ring-bg" cx="65" cy="65" r="${r}"></circle>
+          <circle class="ring-fill" cx="65" cy="65" r="${r}" stroke-dasharray="${c.toFixed(1)}" stroke-dashoffset="${offset.toFixed(1)}"></circle>
+        </svg>
+        <div class="progress-ring-label">
+          <strong>${done}<span>/${total}</span></strong>
+          <span class="progress-ring-sub">peças</span>
+        </div>
+      </div>
+      <div class="progress-info">
+        <div class="progress-title">${complete ? "Bicicleta completa!" : "Montando sua bicicleta..."}</div>
+        <div class="progress-bar"><div class="progress-bar-fill" style="width:${pct}%"></div></div>
+        <div class="progress-total-row"><span>Subtotal</span><strong>${money(builderTotal())}</strong></div>
+      </div>
+    </div>
+  `;
 }
 
 function builderTotal() {
@@ -557,10 +516,7 @@ function renderBuilderStep() {
     <div class="builder-page">
       <div class="breadcrumb"><button id="exitBuilderBtn">← Menu</button> / Monte sua Bicicleta</div>
 
-      <div class="builder-visual">
-        ${bikeSvgMarkup(builderActiveParts())}
-        <div class="builder-subtotal">Subtotal: <strong>${money(builderTotal())}</strong></div>
-      </div>
+      ${builderProgressHtml()}
 
       <div class="builder-tracker">${tracker}</div>
 
@@ -628,9 +584,7 @@ function renderBuilderSummary() {
     <div class="builder-page">
       <div class="breadcrumb"><button id="exitBuilderBtn">← Menu</button> / Monte sua Bicicleta / Resumo</div>
 
-      <div class="builder-visual">
-        ${bikeSvgMarkup(builderActiveParts())}
-      </div>
+      ${builderProgressHtml()}
 
       <div class="section-title">Sua bicicleta montada</div>
       <div class="summary-list">${rows}</div>
