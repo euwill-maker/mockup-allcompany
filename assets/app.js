@@ -738,33 +738,56 @@ function openCart() { renderCartDrawer(); }
 function closeCart() { cartOverlayRoot.innerHTML = ""; }
 
 document.getElementById("menuBtn").addEventListener("click", (e) => { e.preventDefault(); renderHome(); });
-document.getElementById("menuBtnTop").addEventListener("click", renderHome);
 document.getElementById("cartBtn").addEventListener("click", openCart);
 
 // ---------- Menus ----------
-const NAV_PECAS = ["garfos", "aros", "pneus", "freios", "cambios", "pedivelas", "pedais", "guidoes", "suportes", "manoplas"];
-const NAV_ACESSORIOS = ["capacetes", "selins", "acessorios"];
-
-function fillNavDropdown(elId, catIds) {
-  const el = document.getElementById(elId);
-  el.innerHTML = catIds.map(id => {
-    const cat = CATEGORIES.find(c => c.id === id);
-    return cat ? `<a href="#" data-cat="${cat.id}">${cat.name}</a>` : "";
-  }).join("");
-  el.querySelectorAll("a[data-cat]").forEach(a => {
-    a.addEventListener("click", (e) => { e.preventDefault(); renderCategory(a.dataset.cat); });
-  });
+function thumbTag(src) {
+  return src ? `<img src="${src}" alt="" loading="lazy">` : `<img src="assets/brand/jacare-logo-crop.jpg" alt="" loading="lazy">`;
 }
-fillNavDropdown("navPecas", NAV_PECAS);
-fillNavDropdown("navAcessorios", NAV_ACESSORIOS);
-fillNavDropdown("navAllCats", [...NAV_PECAS, ...NAV_ACESSORIOS]);
-document.getElementById("navAllCats").insertAdjacentHTML("afterbegin", `<a href="#" data-bikes-nav="all">Bicicletas</a>`);
 
+function renderAllCategories() {
+  app.innerHTML = `
+    <div class="category-page">
+      <div class="breadcrumb"><button id="backBtn">← Início</button> / Peças e Acessórios</div>
+      <div class="section-title">Peças e Acessórios</div>
+      <div class="section-sub">Escolha uma categoria</div>
+      <div class="cat-tiles">
+        ${CATEGORIES.map(c => {
+          const n = PRODUCTS.filter(p => p.cat === c.id).length;
+          return `
+          <button class="cat-tile" data-cat="${c.id}" type="button">
+            <div class="cat-tile-photo">${imgHtml(categoryCover(c.id), c.name)}</div>
+            <strong>${c.name}</strong>
+            <span>${n} ${n === 1 ? "produto" : "produtos"}</span>
+          </button>`;
+        }).join("")}
+      </div>
+    </div>
+  `;
+  document.getElementById("backBtn").addEventListener("click", renderHome);
+  app.querySelectorAll(".cat-tile").forEach(el => el.addEventListener("click", () => renderCategory(el.dataset.cat)));
+  window.scrollTo(0, 0);
+}
+
+const navPecas = document.getElementById("navPecas");
+navPecas.innerHTML = CATEGORIES.map(c => `<a href="#" data-cat="${c.id}">${thumbTag(categoryCover(c.id))}${c.name}</a>`).join("")
+  + `<a href="#" class="nav-mega-all" data-all-cats>Ver todas as categorias ›</a>`;
+navPecas.querySelectorAll("a[data-cat]").forEach(a => {
+  a.addEventListener("click", (e) => { e.preventDefault(); renderCategory(a.dataset.cat); });
+});
+navPecas.querySelector("[data-all-cats]").addEventListener("click", (e) => { e.preventDefault(); renderAllCategories(); });
+document.getElementById("navPecasBtn").addEventListener("click", renderAllCategories);
+
+document.querySelectorAll("[data-nav-cat]").forEach(btn => {
+  btn.addEventListener("click", () => renderCategory(btn.dataset.navCat));
+});
+
+const bikeThumb = (list) => thumbTag(list.map(b => bikeImg(b, b.colors[0])).find(Boolean));
 const navBikesPanel = document.getElementById("navBikesPanel");
 navBikesPanel.innerHTML = `
-  <a href="#" data-bikes-nav="29">Aro 29</a>
-  <a href="#" data-bikes-nav="outras">Aro 26, juvenis e infantis</a>
-  <a href="#" data-bikes-nav="all">Ver todas</a>
+  <a href="#" data-bikes-nav="29">${bikeThumb(BIKES.filter(b => b.aro === 29))}Aro 29</a>
+  <a href="#" data-bikes-nav="outras">${bikeThumb(BIKES.filter(b => b.aro !== 29))}Aro 26, juvenis e infantis</a>
+  <a href="#" data-bikes-nav="all">${bikeThumb(BIKES)}Ver todas</a>
 `;
 document.querySelectorAll("[data-bikes-nav]").forEach(a => {
   a.addEventListener("click", (e) => { e.preventDefault(); renderBikes(a.dataset.bikesNav); });
