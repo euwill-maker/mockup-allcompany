@@ -269,9 +269,9 @@ function renderHome() {
 
     <div class="builder-cta">
       <div class="builder-cta-text">
-        <div class="builder-cta-eyebrow">UPGRADE</div>
-        <h2>Monte o upgrade da sua bike</h2>
-        <p>Escolha suspensão, aros, pneus, freios, câmbio e mais — veja o total na hora e feche pelo WhatsApp.</p>
+        <div class="builder-cta-eyebrow">PERSONALIZE SUA BIKE</div>
+        <h2>Troque as peças da sua bike</h2>
+        <p>Diga o aro, escolha suspensão, pneus, freios, câmbio e mais — só aparece o que serve na sua bike. Veja o total na hora e peça pelo WhatsApp.</p>
       </div>
       <button class="builder-cta-btn" id="startBuilderBtn">Começar →</button>
     </div>
@@ -503,37 +503,61 @@ function renderSearch(query) {
   window.scrollTo(0, 0);
 }
 
-// ---------- Monte o upgrade da sua bike ----------
+// ---------- Personalize sua Bike ----------
+// Passo 0 pergunta o aro; cada passo aceita mais de um item, com quantidade (aros e pneus já vêm em par).
 const BUILDER_STEPS = [
-  { key: "garfos", label: "Suspensão" },
-  { key: "aros", label: "Aros" },
-  { key: "pneus", label: "Pneus" },
-  { key: "freios", label: "Freios" },
-  { key: "cambios", label: "Câmbio" },
-  { key: "pedivelas", label: "Pedivela" },
-  { key: "guidoes", label: "Guidão" },
-  { key: "selins", label: "Selim" },
+  { key: "garfos", cats: ["garfos"], label: "Suspensão", hint: "Suspensão ou garfo rígido" },
+  { key: "aros", cats: ["aros"], label: "Aros", hint: "Aros vêm em par (dianteiro e traseiro) — ajuste a quantidade se precisar", qty: 2 },
+  { key: "pneus", cats: ["pneus"], label: "Pneus", hint: "Pneus vêm em par — ajuste a quantidade se precisar", qty: 2 },
+  { key: "freios", cats: ["freios"], label: "Freios", hint: "Pode escolher o freio e também discos avulsos" },
+  { key: "cambios", cats: ["cambios"], label: "Câmbio", hint: "Pode escolher câmbio e alavanca juntos" },
+  { key: "pedivelas", cats: ["pedivelas"], label: "Pedivela", hint: "" },
+  { key: "guidoes", cats: ["guidoes", "suportes"], label: "Guidão", hint: "Guidão e suporte (mesa)" },
+  { key: "selins", cats: ["selins"], label: "Selim", hint: "" },
+  { key: "pedais", cats: ["pedais", "manoplas"], label: "Pedais", hint: "Pedais e manoplas" },
 ];
+const BUILDER_AROS = [26, 29];
 
-let builderChoices = {}; // stepKey -> cartItem
+let builderAro = null;
+let builderChoices = {}; // stepKey -> { itemKey: { item, qty } }
 let builderStep = 0;
 
 function startBuilder() {
+  builderAro = null;
   builderChoices = {};
   builderStep = 0;
-  renderBuilderStep();
+  renderBuilderAro();
 }
 
+// Variantes que servem no aro escolhido (sem "aro" = serve em qualquer bike)
+function fitsAro(p, v) {
+  const aro = (v && v.aro) || p.aro;
+  return !aro || aro === builderAro;
+}
+function builderVariants(p) {
+  return variantsOf(p).filter(v => fitsAro(p, v));
+}
+function builderProducts(step) {
+  return PRODUCTS.filter(p => step.cats.includes(p.cat) && builderVariants(p).length);
+}
+
+function builderEntries() {
+  return BUILDER_STEPS.flatMap(s => Object.values(builderChoices[s.key] || {}).map(e => ({ step: s, ...e })));
+}
 function builderTotal() {
-  return Object.values(builderChoices).filter(Boolean).reduce((sum, it) => sum + it.price, 0);
+  return builderEntries().reduce((sum, e) => sum + e.item.price * e.qty, 0);
+}
+function stepDone(s) {
+  return Object.keys(builderChoices[s.key] || {}).length > 0;
 }
 
 function builderProgressHtml() {
   const total = BUILDER_STEPS.length;
-  const done = BUILDER_STEPS.filter(s => builderChoices[s.key]).length;
+  const done = BUILDER_STEPS.filter(stepDone).length;
   const pct = Math.round((done / total) * 100);
   const r = 54, c = 2 * Math.PI * r;
   const offset = c - (pct / 100) * c;
+  const pieces = builderEntries().reduce((n, e) => n + e.qty, 0);
   return `
     <div class="builder-progress">
       <div class="progress-ring">
@@ -543,66 +567,101 @@ function builderProgressHtml() {
         </svg>
         <div class="progress-ring-label">
           <strong>${done}<span>/${total}</span></strong>
-          <span class="progress-ring-sub">peças</span>
+          <span class="progress-ring-sub">etapas</span>
         </div>
       </div>
       <div class="progress-info">
-        <div class="progress-title">${done === total ? "Upgrade completo!" : "Montando seu upgrade..."}</div>
+        <div class="progress-title">Sua bike aro ${builderAro}${pieces ? ` · ${pieces} ${pieces === 1 ? "peça" : "peças"}` : ""}</div>
         <div class="progress-bar"><div class="progress-bar-fill" style="width:${pct}%"></div></div>
-        <div class="progress-total-row"><span>Subtotal</span><strong>${money(builderTotal())}</strong></div>
+        <div class="progress-total-row"><span>Subtotal das peças</span><strong>${money(builderTotal())}</strong></div>
       </div>
     </div>
   `;
 }
 
+function renderBuilderAro() {
+  app.innerHTML = `
+    <div class="builder-page">
+      <div class="breadcrumb"><button id="exitBuilderBtn">← Início</button> / Personalize sua Bike</div>
+      <div class="builder-intro">
+        <div class="builder-cta-eyebrow">PERSONALIZE SUA BIKE</div>
+        <h1>Qual é o aro da sua bicicleta?</h1>
+        <p>Assim mostramos só as peças que servem nela. O número do aro fica escrito na lateral do pneu (ex.: 29 × 2.10).</p>
+        <div class="aro-options">
+          ${BUILDER_AROS.map(a => `<button class="aro-option" data-aro="${a}" type="button"><strong>Aro ${a}</strong><span>${a === 29 ? "Mountain bike adulta, a mais comum hoje" : "Bikes urbanas, freestyle e modelos clássicos"}</span></button>`).join("")}
+        </div>
+        <a class="builder-help" target="_blank" rel="noopener" href="${waLink("Olá! Quero trocar peças da minha bike mas não sei o aro. Podem me ajudar?")}">Não sei o aro — pedir ajuda no WhatsApp</a>
+      </div>
+    </div>
+  `;
+  document.getElementById("exitBuilderBtn").addEventListener("click", renderHome);
+  app.querySelectorAll("[data-aro]").forEach(btn => btn.addEventListener("click", () => {
+    builderAro = Number(btn.dataset.aro);
+    builderChoices = {};
+    builderStep = 0;
+    renderBuilderStep();
+  }));
+  window.scrollTo(0, 0);
+}
+
 function renderBuilderStep() {
   const step = BUILDER_STEPS[builderStep];
-  const products = PRODUCTS.filter(p => p.cat === step.key);
-  const chosen = builderChoices[step.key];
+  const products = builderProducts(step);
+  const chosen = builderChoices[step.key] || {};
 
   const tracker = BUILDER_STEPS.map((s, i) => `
-    <div class="tracker-dot ${i === builderStep ? "current" : ""} ${builderChoices[s.key] ? "done" : ""}" data-step="${i}">
-      <span class="tracker-num">${builderChoices[s.key] ? "✓" : i + 1}</span>
+    <button class="tracker-dot ${i === builderStep ? "current" : ""} ${stepDone(s) ? "done" : ""}" data-step="${i}" type="button">
+      <span class="tracker-num">${stepDone(s) ? "✓" : i + 1}</span>
       <span class="tracker-label">${s.label}</span>
-    </div>
+    </button>
   `).join("");
 
   const cards = products.map((p, pi) => {
-    const vs = variantsOf(p);
-    const isChosen = chosen && chosen.id === p.id;
+    const vs = builderVariants(p);
+    const chosenHere = Object.values(chosen).filter(e => e.item.id === p.id);
     return `
-      <div class="product-card ${isChosen ? "chosen" : ""}">
+      <div class="product-card ${chosenHere.length ? "chosen" : ""}">
         <div class="thumb">${imgHtml(productImg(p, vs[0]), p.name)}</div>
         <div class="info">
           <div class="name">${esc(p.name)}</div>
-          ${hasChoice(p) ? `
-            <select class="variant-select" data-pi="${pi}" aria-label="${esc(p.variantLabel)}">
-              ${vs.map((v, i) => `<option value="${i}" ${isChosen && chosen.key === cartItem(p, v).key ? "selected" : ""}>${esc(v.label)}${v.price && v.price !== p.price ? ` — ${money(v.price)}` : ""}</option>`).join("")}
-            </select>` : ""}
-          <div class="price">${money(isChosen ? chosen.price : minPrice(p))}</div>
-          <button class="add-btn choose-btn" data-pi="${pi}">${isChosen ? "✓ Escolhido" : "Escolher"}</button>
+          ${vs.length > 1 ? `
+            <select class="variant-select" data-pi="${pi}" aria-label="${esc(p.variantLabel || "Opção")}">
+              ${vs.map((v, i) => `<option value="${i}">${esc(v.label)}${v.price && v.price !== p.price ? ` — ${money(v.price)}` : ""}</option>`).join("")}
+            </select>` : (vs[0].label ? `<div class="sku">${esc(vs[0].label)}</div>` : "")}
+          <div class="price">${money(Math.min(...vs.map(v => variantPrice(p, v))))}${step.qty ? ' <small>cada</small>' : ""}</div>
+          ${chosenHere.map(e => `
+            <div class="chosen-line">
+              <span>✓ ${esc(e.item.name.replace(p.name, "").replace(/^ — /, "") || "Escolhido")}</span>
+              <div class="qty-control">
+                <button type="button" data-dec="${esc(e.item.key)}" aria-label="Diminuir">−</button>
+                <span class="qty">${e.qty}</span>
+                <button type="button" data-inc="${esc(e.item.key)}" aria-label="Aumentar">+</button>
+              </div>
+            </div>`).join("")}
+          <button class="add-btn choose-btn ${chosenHere.length ? "in-cart" : ""}" data-pi="${pi}" type="button">${chosenHere.length ? "+ Adicionar outra opção" : (step.qty ? `Adicionar par (${step.qty} un.)` : "Adicionar")}</button>
         </div>
       </div>
     `;
   }).join("");
 
+  const isLast = builderStep === BUILDER_STEPS.length - 1;
   app.innerHTML = `
     <div class="builder-page">
-      <div class="breadcrumb"><button id="exitBuilderBtn">← Início</button> / Monte o upgrade da sua bike</div>
+      <div class="breadcrumb"><button id="exitBuilderBtn">← Início</button> / Personalize sua Bike · <button id="changeAroBtn">aro ${builderAro} (trocar)</button></div>
       ${builderProgressHtml()}
       <div class="builder-tracker">${tracker}</div>
       <div class="section-title">Passo ${builderStep + 1} de ${BUILDER_STEPS.length}: ${step.label}</div>
-      <div class="section-sub">${products.length} opções disponíveis</div>
-      <div class="product-grid">${cards}</div>
+      <div class="section-sub">${products.length} ${products.length === 1 ? "opção" : "opções"} para aro ${builderAro}${step.hint ? ` · ${step.hint}` : ""}</div>
+      <div class="product-grid">${cards || "<p>Nenhuma peça desta etapa para esse aro. Pode pular.</p>"}</div>
       <div class="builder-nav">
-        <button class="builder-nav-btn ghost" id="builderBackBtn" ${builderStep === 0 ? "disabled" : ""}>← Voltar</button>
-        <button class="builder-nav-btn ghost" id="builderSkipBtn">Pular esta etapa</button>
-        <button class="builder-nav-btn primary" id="builderNextBtn">${builderStep === BUILDER_STEPS.length - 1 ? "Ver resumo" : "Continuar →"}</button>
+        <button class="builder-nav-btn ghost" id="builderBackBtn" type="button" ${builderStep === 0 ? "disabled" : ""}>← Voltar</button>
+        <button class="builder-nav-btn primary" id="builderNextBtn" type="button">${isLast ? "Ver resumo" : (stepDone(step) ? "Continuar →" : "Pular esta etapa →")}</button>
       </div>
     </div>
   `;
 
   document.getElementById("exitBuilderBtn").addEventListener("click", renderHome);
+  document.getElementById("changeAroBtn").addEventListener("click", renderBuilderAro);
   app.querySelectorAll(".tracker-dot").forEach(el => {
     el.addEventListener("click", () => { builderStep = Number(el.dataset.step); renderBuilderStep(); });
   });
@@ -610,62 +669,74 @@ function renderBuilderStep() {
     btn.addEventListener("click", () => {
       const p = products[Number(btn.dataset.pi)];
       const sel = app.querySelector(`.variant-select[data-pi="${btn.dataset.pi}"]`);
-      builderChoices[step.key] = cartItem(p, variantsOf(p)[sel ? Number(sel.value) : 0]);
+      const item = cartItem(p, builderVariants(p)[sel ? Number(sel.value) : 0]);
+      const bucket = builderChoices[step.key] = builderChoices[step.key] || {};
+      if (bucket[item.key]) bucket[item.key].qty += step.qty || 1;
+      else bucket[item.key] = { item, qty: step.qty || 1 };
       renderBuilderStep();
     });
   });
+  const bump = (key, delta) => {
+    const bucket = builderChoices[step.key];
+    bucket[key].qty += delta;
+    if (bucket[key].qty <= 0) delete bucket[key];
+    renderBuilderStep();
+  };
+  app.querySelectorAll("[data-inc]").forEach(b => b.addEventListener("click", () => bump(b.dataset.inc, 1)));
+  app.querySelectorAll("[data-dec]").forEach(b => b.addEventListener("click", () => bump(b.dataset.dec, -1)));
   document.getElementById("builderBackBtn").addEventListener("click", () => {
     if (builderStep > 0) { builderStep--; renderBuilderStep(); }
   });
-  document.getElementById("builderSkipBtn").addEventListener("click", () => {
-    builderChoices[step.key] = null;
-    advanceBuilder();
-  });
   document.getElementById("builderNextBtn").addEventListener("click", advanceBuilder);
-  window.scrollTo(0, 0);
 }
 
 function advanceBuilder() {
-  if (builderStep < BUILDER_STEPS.length - 1) { builderStep++; renderBuilderStep(); }
+  if (builderStep < BUILDER_STEPS.length - 1) { builderStep++; renderBuilderStep(); window.scrollTo(0, 0); }
   else renderBuilderSummary();
 }
 
 function builderWaLink() {
-  const lines = BUILDER_STEPS.map(step => {
-    const it = builderChoices[step.key];
-    return it ? `• ${step.label}: ${it.name}${it.sku ? ` (cód. ${it.sku})` : ""} — ${money(it.price)}` : `• ${step.label}: não escolhido`;
-  });
-  return waLink(`Olá! Montei um upgrade para a minha bike no site:\n\n${lines.join("\n")}\n\nTotal: ${money(builderTotal())}`);
+  const lines = builderEntries().map(e => `• ${e.qty}x ${e.item.name}${e.item.sku ? ` (cód. ${e.item.sku})` : ""} — ${money(e.item.price * e.qty)}`);
+  const total = builderTotal();
+  return waLink(`Olá! Personalizei minha bike aro ${builderAro} no site e quero estas peças:\n\n${lines.join("\n")}\n\nTotal das peças: ${money(total)} (ou ${money(total * (1 - PIX_DISCOUNT))} no PIX)\n\nQuanto fica a instalação?`);
 }
 
 function renderBuilderSummary() {
+  const entries = builderEntries();
   const rows = BUILDER_STEPS.map(step => {
-    const it = builderChoices[step.key];
+    const list = entries.filter(e => e.step.key === step.key);
     return `
       <div class="summary-row">
         <div class="summary-label">${step.label}</div>
-        ${it
-          ? `<div class="summary-item">${it.img ? `<img src="${it.img}" alt="">` : ""}<span>${esc(it.name)}</span><strong>${money(it.price)}</strong></div>`
-          : `<div class="summary-item empty">Não escolhido</div>`}
+        <div class="summary-items">
+          ${list.length ? list.map(e => `
+            <div class="summary-item">${e.item.img ? `<img src="${e.item.img}" alt="">` : ""}<span>${e.qty > 1 ? `${e.qty}× ` : ""}${esc(e.item.name)}</span><strong>${money(e.item.price * e.qty)}</strong></div>`).join("")
+            : `<div class="summary-item empty">Não escolhido</div>`}
+        </div>
       </div>
     `;
   }).join("");
+  const total = builderTotal();
 
   app.innerHTML = `
     <div class="builder-page">
-      <div class="breadcrumb"><button id="exitBuilderBtn">← Início</button> / Monte o upgrade / Resumo</div>
+      <div class="breadcrumb"><button id="exitBuilderBtn">← Início</button> / Personalize sua Bike / Resumo</div>
       ${builderProgressHtml()}
-      <div class="section-title">Seu upgrade</div>
+      <div class="section-title">Suas peças para aro ${builderAro}</div>
       <div class="summary-list">${rows}</div>
-      <div class="cart-total" style="max-width:500px;margin:16px auto;"><span>Total</span><span>${money(builderTotal())}</span></div>
-      <div class="builder-nav" style="max-width:500px;margin:0 auto;">
-        <button class="builder-nav-btn ghost" id="restartBuilderBtn">Montar de novo</button>
-        <a class="checkout-btn" href="${builderWaLink()}" target="_blank" rel="noopener">Fechar pedido no WhatsApp</a>
+      <div class="summary-total">
+        <div class="cart-total"><span>Total das peças</span><span>${money(total)}</span></div>
+        <div class="cart-pix">ou <strong>${money(total * (1 - PIX_DISCOUNT))}</strong> no PIX · 3x sem juros no cartão</div>
+        <p class="summary-note">A instalação é orçada à parte — é só perguntar na mensagem do WhatsApp.</p>
+      </div>
+      <div class="builder-nav summary-nav">
+        <button class="builder-nav-btn ghost" id="editBuilderBtn" type="button">← Editar peças</button>
+        <a class="checkout-btn ${entries.length ? "" : "hidden"}" href="${builderWaLink()}" target="_blank" rel="noopener">Pedir no WhatsApp</a>
       </div>
     </div>
   `;
   document.getElementById("exitBuilderBtn").addEventListener("click", renderHome);
-  document.getElementById("restartBuilderBtn").addEventListener("click", startBuilder);
+  document.getElementById("editBuilderBtn").addEventListener("click", () => { builderStep = 0; renderBuilderStep(); });
   window.scrollTo(0, 0);
 }
 

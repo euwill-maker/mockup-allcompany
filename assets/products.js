@@ -1,6 +1,6 @@
 // Catálogo real da Jacaré Bike Store — planilha SITEE.xlsx enviada pela loja (30/07/2026).
 // Produtos com cor/tamanho diferentes viram UM produto com "variants" (cada variante tem seu código).
-// Variante sem "price" usa o preço do produto. "img" é opcional: sem foto, o site mostra o placeholder.
+// Variante sem "price" usa o preço do produto. "aro" (no produto ou na variante) filtra o "Personalize sua Bike". "img" é opcional: sem foto, o site mostra o placeholder.
 
 const CATEGORIES = [
   { id: "capacetes", name: "Capacetes" },
@@ -68,13 +68,13 @@ const PRODUCTS = [
     ] },
 
   // GARFOS E SUSPENSÃO
-  { id: "garfo-nero-sport-rl", name: "Suspensão Absolute Nero Sport RL Aro 29 — 100mm, com trava", cat: "garfos", price: 499.99, sku: "56826" },
-  { id: "garfo-nero-sport", name: "Suspensão Absolute Nero Sport Aro 29 — 100mm, com regulagem", cat: "garfos", price: 399.90, sku: "56825" },
-  { id: "garfo-ahd-938sd", name: "Suspensão AHD 938SD Aro 29 — 100mm, com trava", cat: "garfos", price: 149.99, sku: "51415" },
-  { id: "garfo-brutus-fr-pro", name: "Suspensão Brutus FR Pro Aro 26 — 150mm, com regulagem", cat: "garfos", price: 399.99, sku: "54116" },
-  { id: "garfo-absolute-jr", name: "Suspensão Absolute JR Aro 24 — 80mm", cat: "garfos", price: 129.99, sku: "57451", color: "Preto" },
-  { id: "garfo-brutus-rl-26", name: "Garfo Rígido Absolute Brutus RL Aro 26 — Aço", cat: "garfos", price: 129.99, sku: "55829" },
-  { id: "garfo-brutus-rl-29", name: "Garfo Rígido Absolute Brutus RL Aro 29 — Aço", cat: "garfos", price: 129.99, sku: "55876", color: "Preto" },
+  { id: "garfo-nero-sport-rl", aro: 29, name: "Suspensão Absolute Nero Sport RL Aro 29 — 100mm, com trava", cat: "garfos", price: 499.99, sku: "56826" },
+  { id: "garfo-nero-sport", aro: 29, name: "Suspensão Absolute Nero Sport Aro 29 — 100mm, com regulagem", cat: "garfos", price: 399.90, sku: "56825" },
+  { id: "garfo-ahd-938sd", aro: 29, name: "Suspensão AHD 938SD Aro 29 — 100mm, com trava", cat: "garfos", price: 149.99, sku: "51415" },
+  { id: "garfo-brutus-fr-pro", aro: 26, name: "Suspensão Brutus FR Pro Aro 26 — 150mm, com regulagem", cat: "garfos", price: 399.99, sku: "54116" },
+  { id: "garfo-absolute-jr", aro: 24, name: "Suspensão Absolute JR Aro 24 — 80mm", cat: "garfos", price: 129.99, sku: "57451", color: "Preto" },
+  { id: "garfo-brutus-rl-26", aro: 26, name: "Garfo Rígido Absolute Brutus RL Aro 26 — Aço", cat: "garfos", price: 129.99, sku: "55829" },
+  { id: "garfo-brutus-rl-29", aro: 29, name: "Garfo Rígido Absolute Brutus RL Aro 29 — Aço", cat: "garfos", price: 129.99, sku: "55876", color: "Preto" },
 
   // PEDAIS
   { id: "pedal-brutus-flat", name: "Pedal Plataforma Absolute Brutus Flat — Alumínio, eixo Boron", cat: "pedais", price: 69.99, variantLabel: "Cor",
@@ -127,26 +127,26 @@ const PRODUCTS = [
   // AROS
   { id: "aro-vmaxx-sl", name: "Aro Vmaxx SL Disc — 36 furos", cat: "aros", price: 89.99, variantLabel: "Aro / Cor",
     variants: [
-      { label: "26 — Preto", sku: "81950" }, { label: "29 — Preto", sku: "81952" }, { label: "26 — Amarelo Neon", sku: "85605" },
-      { label: "26 — Azul", sku: "85606" }, { label: "26 — Vermelho", sku: "85610" }, { label: "26 — Branco", sku: "85607" },
-      { label: "26 — Rosa Neon", sku: "85609" },
+      { label: "26 — Preto", aro: 26, sku: "81950" }, { label: "29 — Preto", aro: 29, sku: "81952" }, { label: "26 — Amarelo Neon", aro: 26, sku: "85605" },
+      { label: "26 — Azul", aro: 26, sku: "85606" }, { label: "26 — Vermelho", aro: 26, sku: "85610" }, { label: "26 — Branco", aro: 26, sku: "85607" },
+      { label: "26 — Rosa Neon", aro: 26, sku: "85609" },
     ] },
   { id: "aro-slide-disc", name: "Aro Absolute Slide Disc — Alumínio, 36 furos", cat: "aros", price: 59.99, variantLabel: "Aro",
-    variants: [{ label: "26", sku: "43379" }, { label: "29", sku: "43391" }] },
-  { id: "aro-extreme-pro", name: "Aro Extreme Pro 29 — 32 furos, com ilhós", cat: "aros", price: 129.99, sku: "8777", color: "Preto" },
+    variants: [{ label: "26", aro: 26, sku: "43379" }, { label: "29", aro: 29, sku: "43391" }] },
+  { id: "aro-extreme-pro", aro: 29, name: "Aro Extreme Pro 29 — 32 furos, com ilhós", cat: "aros", price: 129.99, sku: "8777", color: "Preto" },
 
   // PNEUS
-  { id: "pneu-kenda-k1008-26", name: "Pneu Kenda Flame K1008 26 × 2.125 — faixa colorida", cat: "pneus", price: 149.99, variantLabel: "Faixa",
+  { id: "pneu-kenda-k1008-26", aro: 26, name: "Pneu Kenda Flame K1008 26 × 2.125 — faixa colorida", cat: "pneus", price: 149.99, variantLabel: "Faixa",
     variants: [
       { label: "Preto", sku: "59068", price: 129.99 }, { label: "Rosa", sku: "59173" }, { label: "Roxo", sku: "59175" },
       { label: "Vermelho", sku: "59177" }, { label: "Azul", sku: "59174" },
     ] },
   { id: "pneu-maxxis-hookworm", name: "Pneu Maxxis Hookworm 2.50 Slick — Wheeling / Grau / Dirt", cat: "pneus", price: 399.99, variantLabel: "Aro",
-    variants: [{ label: "26 × 2.50", sku: "" }, { label: "29 × 2.50", sku: "" }] },
-  { id: "pneu-kenda-k1008a-29", name: "Pneu Kenda Flame K1008A 29 × 2.125", cat: "pneus", price: 99.99, sku: "59355", color: "Preto" },
-  { id: "pneu-kenda-k1256-29", name: "Pneu Kenda Regio K1256 29 × 2.2", cat: "pneus", price: 129.99, sku: "59943", color: "Preto" },
-  { id: "pneu-kenda-k1153-29", name: "Pneu Kenda K1153 MTB 29 × 2.10 — faixa marrom", cat: "pneus", price: 99.99, sku: "59936" },
-  { id: "pneu-levorin-eruption-29", name: "Pneu Levorin Eruption 29 × 2.30", cat: "pneus", price: 99.99, sku: "3072", color: "Preto" },
+    variants: [{ label: "26 × 2.50", aro: 26, sku: "" }, { label: "29 × 2.50", aro: 29, sku: "" }] },
+  { id: "pneu-kenda-k1008a-29", aro: 29, name: "Pneu Kenda Flame K1008A 29 × 2.125", cat: "pneus", price: 99.99, sku: "59355", color: "Preto" },
+  { id: "pneu-kenda-k1256-29", aro: 29, name: "Pneu Kenda Regio K1256 29 × 2.2", cat: "pneus", price: 129.99, sku: "59943", color: "Preto" },
+  { id: "pneu-kenda-k1153-29", aro: 29, name: "Pneu Kenda K1153 MTB 29 × 2.10 — faixa marrom", cat: "pneus", price: 99.99, sku: "59936" },
+  { id: "pneu-levorin-eruption-29", aro: 29, name: "Pneu Levorin Eruption 29 × 2.30", cat: "pneus", price: 99.99, sku: "3072", color: "Preto" },
 
   // MANOPLAS
   { id: "manopla-bmx3", name: "Manopla Absolute BMX3 — Borracha, 160mm, com tampa", cat: "manoplas", price: 25.00, variantLabel: "Cor",
