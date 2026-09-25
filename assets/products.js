@@ -90,7 +90,7 @@ const PRODUCTS = [
   { id: "pedivela-nero-1x", name: "Pedivela Absolute Nero 1x — 170mm, 34D, Alumínio", cat: "pedivelas", price: 99.99, variantLabel: "Cor",
     variants: [{ label: "Preto", sku: "56894" }, { label: "Roxo", sku: "57057" }] },
   { id: "pedivela-nero-jr", name: "Pedivela Absolute Nero JR — Aço, 32D", cat: "pedivelas", price: 49.99, variantLabel: "Tamanho",
-    variants: [{ label: "152mm", sku: "56896" }, { label: "127mm", sku: "56895" }] },
+    variants: [{ label: "152mm (aro 24)", aro: 24, sku: "56896" }, { label: "127mm (aro 20)", aro: 20, sku: "56895" }] },
   { id: "pedivela-wild", name: "Pedivela Absolute Wild — Alumínio, 175mm, 34D", cat: "pedivelas", price: 189.99, sku: "56792", color: "Oil Slick" },
   { id: "pedivela-prime-d", name: "Pedivela Absolute Prime D — 165mm, 34D", cat: "pedivelas", price: 349.99, sku: "56680" },
 
@@ -166,7 +166,7 @@ const PRODUCTS = [
 const FRAME_SIZES_29 = ["15", "17", "19", "21"];
 
 // Bicicletas: price = à vista; installments = texto do parcelado da planilha.
-// colors vazio = loja ainda vai confirmar as cores (o site mostra "cores sob consulta").
+// colors vazio = loja ainda vai confirmar as cores (o site mostra "cores sob consulta"). versions = opções extras (ex.: Single/7V).
 const BIKES = [
   { id: "oggi-bw-74", brand: "Oggi", name: "Oggi Big Wheel 7.4 SLX 12V 2026", aro: 29, price: 9810.00, installments: "18x de R$ 605,55",
     colors: ["Grafite/Preto", "Preto/Cinza"], specs: ["Aro 29", "Grupo Shimano SLX 12 velocidades", "Modelo 2026"] },
@@ -187,7 +187,7 @@ const BIKES = [
   { id: "gti-chroma", brand: "GTI", name: "GTI Chroma 21V Cubo Cassete", aro: 29, price: 899.99, installments: "12x de R$ 95,00",
     colors: ["Azul", "Vermelho", "Verde", "Amarelo", "Roxo"], specs: ["Aro 29", "21 velocidades", "Cubo cassete"] },
   { id: "absolute-brutus", brand: "Absolute", name: "Absolute Brutus Personalizada — Single ou 7V", aro: 26, price: 2999.99, installments: "12x sem juros",
-    colors: [], specs: ["Aro 26", "Single speed ou 7 velocidades", "Montagem personalizada — cores à escolha"] },
+    colors: [], versions: ["Single speed", "7 velocidades"], specs: ["Aro 26", "Single speed ou 7 velocidades", "Montagem personalizada — cores à escolha"] },
   { id: "viking-tuff25", brand: "Viking", name: "Viking Tuff 25 — 21V", aro: 26, price: 1499.99, installments: "10x sem juros",
     colors: ["Rosa/Azul", "Rosa/Verde", "Cinza/Preto", "Azul Metálico", "Prata/Azul/Verde", "Preto/Azul", "Preto/Rosa", "Roxo/Amarelo/Verde"],
     specs: ["Aro 26", "21 velocidades"] },

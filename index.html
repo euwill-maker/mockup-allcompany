@@ -2,42 +2,56 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Jacaré Bike Store — Bicicletas e Peças em São Leopoldo/RS</title>
   <meta name="description" content="Bicicletas Oggi, Absolute, Viking e Nathor, peças e acessórios com preço à vista e parcelado. Compre pelo WhatsApp — Jacaré Bike Store, São Leopoldo/RS.">
-  <link rel="icon" href="assets/brand/jacare-logo-crop.jpg">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/brand/favicon-32.png">
+  <link rel="apple-touch-icon" href="assets/brand/apple-touch-icon.png">
+  <meta name="theme-color" content="#111317">
+  <script>
+    // Pré-carrega o banner só quando a visita começa na home (link direto de produto/bike não precisa dele)
+    (function () {
+      if (/^#\/?(bikes|bike|pecas|categoria|produto|busca|favoritos|personalize)(\/|\?|$)/.test(location.hash)) return;
+      [["assets/brand/hero-mobile.webp", "(max-width: 600px)"], ["assets/brand/hero-banner.webp", "(min-width: 601px)"]].forEach(function (a) {
+        var l = document.createElement("link");
+        l.rel = "preload"; l.as = "image"; l.href = a[0]; l.media = a[1]; l.setAttribute("fetchpriority", "high");
+        document.head.appendChild(l);
+      });
+    })();
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;1,700;1,800&display=swap" rel="stylesheet">
-  <meta name="theme-color" content="#111317">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:ital,wght@0,700;0,800;1,800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
+  <a class="skip-link" href="#app">Pular para o conteúdo</a>
   <header class="site-header">
     <div class="topbar">
       <div class="topbar-inner">
-        <a href="#" id="menuBtn" class="logo-badge" aria-label="Jacaré Bike Store — início">
-          <img src="assets/brand/jacare-logo-crop.jpg" alt="Jacaré Bike Store" class="logo-img">
+        <a href="#/" id="menuBtn" class="logo-badge" aria-label="Jacaré Bike Store — página inicial">
+          <img src="assets/brand/logo-180.webp" alt="Jacaré Bike Store" class="logo-img" width="180" height="166">
         </a>
-        <div class="search-box">
-          <input id="searchInput" type="search" placeholder="Buscar bike, peça ou código..." aria-label="Buscar">
-          <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-        </div>
+        <form class="search-box" id="searchForm" role="search" action="#">
+          <input id="searchInput" type="search" enterkeyhint="search" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Buscar bike, peça ou código..." aria-label="Buscar bike, peça ou código">
+          <button class="search-clear" id="searchClear" type="button" aria-label="Limpar busca" hidden>&times;</button>
+          <svg class="search-icon" aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        </form>
         <div class="topbar-links">
-          <a class="topbar-link" href="https://wa.me/555194285149" target="_blank" rel="noopener">
-            <svg class="topbar-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14v-2a8 8 0 0116 0v2"></path><path d="M2 15a2 2 0 012-2h1a1 1 0 011 1v4a1 1 0 01-1 1H4a2 2 0 01-2-2v-2z"></path><path d="M22 15a2 2 0 00-2-2h-1a1 1 0 00-1 1v4a1 1 0 001 1h1a2 2 0 002-2v-2z"></path></svg>
+          <a class="topbar-link" href="https://wa.me/555194285149" target="_blank" rel="noopener" aria-label="Atendimento pelo WhatsApp">
+            <svg class="topbar-icon" aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.16-.17.2-.35.22-.64.08-.3-.15-1.26-.47-2.39-1.48-.88-.79-1.48-1.76-1.65-2.06-.17-.3-.02-.46.13-.6.13-.14.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.61-.92-2.2-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.48 0 1.46 1.07 2.88 1.21 3.07.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.7.63.71.22 1.36.19 1.87.12.57-.09 1.76-.72 2-1.41.25-.7.25-1.29.17-1.41-.07-.13-.27-.2-.57-.35M12.05 21.79h-.01a9.87 9.87 0 01-5.03-1.38l-.36-.21-3.74.98 1-3.65-.24-.37a9.86 9.86 0 01-1.51-5.26c0-5.45 4.44-9.88 9.89-9.88 2.64 0 5.12 1.03 6.99 2.9a9.83 9.83 0 012.89 6.99c0 5.45-4.44 9.88-9.88 9.88m8.41-18.3A11.82 11.82 0 0012.05 0C5.5 0 .16 5.34.16 11.89c0 2.1.55 4.14 1.59 5.95L.06 24l6.3-1.65a11.88 11.88 0 005.68 1.45h.01c6.55 0 11.89-5.34 11.89-11.89 0-3.18-1.24-6.16-3.48-8.41z"/></svg>
             <span>Atendimento<br>WhatsApp</span>
           </a>
-          <button class="topbar-link" id="favBtn" type="button" aria-label="Favoritos">
+          <a class="topbar-link" id="favBtn" href="#/favoritos" aria-label="Favoritos">
             <span class="topbar-icon-wrap">
-              <svg class="topbar-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 00-7.8 0L12 5.6l-1-1a5.5 5.5 0 00-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 000-7.8z"></path></svg>
+              <svg class="topbar-icon" aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 00-7.8 0L12 5.6l-1-1a5.5 5.5 0 00-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 000-7.8z"></path></svg>
               <span class="badge hidden" id="favBadge">0</span>
             </span>
             <span>Favoritos</span>
-          </button>
+          </a>
           <button class="topbar-link cart-link" id="cartBtn" type="button" aria-label="Carrinho">
             <span class="topbar-icon-wrap">
-              <svg class="topbar-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.4"></circle><circle cx="17" cy="20" r="1.4"></circle><path d="M2.5 3h2l2.3 12a2 2 0 002 1.6h7.6a2 2 0 002-1.6L20 7.5H6"></path></svg>
+              <svg class="topbar-icon" aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.4"></circle><circle cx="17" cy="20" r="1.4"></circle><path d="M2.5 3h2l2.3 12a2 2 0 002 1.6h7.6a2 2 0 002-1.6L20 7.5H6"></path></svg>
               <span class="badge hidden" id="cartBadge">0</span>
             </span>
             <span>Carrinho</span>
@@ -49,48 +63,48 @@
       <div class="navbar-inner">
         <div class="navbar-main">
           <div class="nav-dropdown">
-            <button class="nav-link has-chevron" id="navBicicletas" type="button">Bicicletas</button>
+            <a class="nav-link has-chevron" id="navBicicletas" href="#/bikes">Bicicletas</a>
             <div class="nav-dropdown-panel" id="navBikesPanel"></div>
           </div>
           <div class="nav-dropdown">
-            <button class="nav-link has-chevron" id="navPecasBtn" type="button">Peças</button>
+            <a class="nav-link has-chevron" id="navPecasBtn" href="#/pecas">Peças</a>
             <div class="nav-dropdown-panel nav-mega" id="navPecas"></div>
           </div>
-          <button class="nav-link" data-nav-cat="capacetes" type="button">Capacetes</button>
-          <button class="nav-link" data-nav-cat="pneus" type="button">Pneus</button>
-          <button class="nav-link" data-nav-cat="selins" type="button">Selins</button>
+          <a class="nav-link" id="navCat-capacetes" href="#/categoria/capacetes">Capacetes</a>
+          <a class="nav-link" id="navCat-pneus" href="#/categoria/pneus">Pneus</a>
+          <a class="nav-link" id="navCat-selins" href="#/categoria/selins">Selins</a>
         </div>
-        <button class="nav-builder-badge" id="navBuilder" type="button">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 00-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 005.4-5.4l-2.8 2.8-2-2z"></path></svg>
-          Personalize sua Bike
-        </button>
+        <a class="nav-builder-badge" id="navBuilder" href="#/personalize">
+          <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 00-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 005.4-5.4l-2.8 2.8-2-2z"></path></svg>
+          <span>Personalize<span class="nav-builder-long"> sua Bike</span></span>
+        </a>
       </div>
     </nav>
   </header>
 
-  <main id="app"></main>
+  <main id="app" tabindex="-1"></main>
   <div id="cartOverlayRoot"></div>
 
   <footer class="site-footer">
     <div class="footer-cols">
       <div class="footer-col">
-        <h4>Pagamento</h4>
+        <h2>Pagamento</h2>
         <span>Bicicletas: à vista ou parcelado no cartão</span>
         <span>Peças: 3x sem juros ou 5% off no PIX</span>
       </div>
       <div class="footer-col">
-        <h4>Atendimento</h4>
-        <a href="https://wa.me/555194285149" target="_blank" rel="noopener">📱 +55 51 94285149</a>
-        <span>📍 Av. Thomas Edison, 1760 - Scharlau, São Leopoldo/RS</span>
+        <h2>Atendimento</h2>
+        <a href="https://wa.me/555194285149" target="_blank" rel="noopener">WhatsApp: (51) 9428-5149</a>
+        <a href="https://www.google.com/maps/search/?api=1&amp;query=Av.%20Thomas%20Edison%2C%201760%20-%20Scharlau%2C%20S%C3%A3o%20Leopoldo%20-%20RS" target="_blank" rel="noopener">Av. Thomas Edison, 1760 - Scharlau, São Leopoldo/RS <span class="footer-map">(ver no mapa)</span></a>
       </div>
       <div class="footer-col">
-        <h4>Redes Sociais</h4>
-        <a href="https://www.instagram.com/jacarebikestore/" target="_blank" rel="noopener">📷 @jacarebikestore</a>
+        <h2>Redes Sociais</h2>
+        <a href="https://www.instagram.com/jacarebikestore/" target="_blank" rel="noopener">Instagram: @jacarebikestore</a>
       </div>
     </div>
     <div class="footer-divider"></div>
     <div class="footer-bottom">
-      <div class="brand"><img src="assets/brand/jacare-logo-crop.jpg" alt="Jacaré Bike Store" class="footer-logo-img"></div>
+      <img src="assets/brand/logo-120.webp" alt="Jacaré Bike Store" class="footer-logo-img" width="120" height="110" loading="lazy">
       <div class="footer-copy">© Todos os direitos reservados - Jacaré Bike Store - 2026</div>
     </div>
     <div class="disclaimer">Preços e disponibilidade sujeitos a confirmação pelo WhatsApp.</div>
